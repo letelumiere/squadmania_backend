@@ -19,13 +19,7 @@ public class SquadmaniaAuthApplication {
 	@Bean
 	CommandLineRunner commandLineRunner(UserService uService, UserRepository uRepository){
 		return args -> {
-			Userinfo user1 = Userinfo.builder()
-				.authId("user1")
-				.emailId("doctor@baek.com")
-				.password("Kaboom")
-			.build();	
 
-			uService.saveUser(user1);
 		};	
 	}
 }

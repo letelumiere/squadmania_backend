@@ -23,6 +23,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -79,6 +81,7 @@ public class Userinfo implements UserDetails {
     private Date nicknameDate;
 
     @Column(name = "login_date")
+    @CurrentTimestamp(timing = GenerationTiming.ALWAYS)
     private Date loginDate;
 
     @Column(name = "login_rest_date")

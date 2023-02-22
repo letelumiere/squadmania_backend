@@ -1,0 +1,20 @@
+[
+    {
+        "id":"<여긴uuid로생성한부분>>",
+        "usermail_id":"<여긴구글인증으로받은고유아이디>",
+        "usermail_idtype":"manager",
+        "nickname":"뮌헨한국지부",
+        "fifaname":"CF조규성",
+        "profileimg":"https://fo4.dn.nexoncdn.co.kr/live/externalAssets/common/playersAction/p278158023.png?rd=202301201100",
+        "createdAt":"2022-05-08T07:23:37.000Z",
+        "introduce":"7JWI64WV7ZWY7IS47JqUIQ==",
+        "fifa_highrank":"ico_rank2",
+        "fifa_highrankdate":"2022-09-28T11:31:01",
+        "fifa_update_date":"2023-01-10T01:26:17.645Z",
+        "fifa_currentrank":"ico_rank8",
+        "fifa_teamprice":"579,248,474,510 BP ",
+        "fifa_level":"2543",
+        "withdraw_date":"0000-00-00 00:00:00",
+        "nickname_date":"2022-05-08T07:23:38.000Z"
+    }
+]

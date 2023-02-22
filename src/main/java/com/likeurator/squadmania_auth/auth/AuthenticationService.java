@@ -32,10 +32,9 @@ public class AuthenticationService {
         
         var jwtToken = jwtService.generateToken(user);
         
-        return AuthenticationResponse.builder().token(jwtToken).build(); 
+        return AuthenticationResponse.builder().accessToken(jwtToken).build(); 
     }
     
-
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
@@ -45,8 +44,25 @@ public class AuthenticationService {
         );
         var user = repository.findByEmail(request.getEmail_id())
             .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        var accessToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+        return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+    }
+
+    public AuthenticationResponse refresh(AuthenticationRequest request) {
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                request.getEmail_id(),
+                request.getPassword()
+            )
+        );
+        var user = repository.findByEmail(request.getEmail_id())
+            .orElseThrow();
+
+        var jwtToken = jwtService.generateRefreshToken(user);
+
+        return AuthenticationResponse.builder().refreshToken(jwtToken).build();
     }
 
     
