@@ -21,13 +21,4 @@ public class DemoController {
         return ResponseEntity.ok("hello from secured endpoint");
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody Userinfo userinfo){
-        return null;
-    }
-
-    @GetMapping("/logout")
-    public ResponseEntity<AuthenticationResponse> logout(){
-        return null;
-    }
 }

@@ -20,37 +20,19 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationController {
     private final AuthenticationService service;
 
-    @PostMapping("/register")
+    @PostMapping("/register")   //말 그대로 회원 가입  
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(service.register(request));
     }
 
-    @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody AuthenticationRequest request){
+    @PostMapping("/authenticate")   //로그인 시 Token 체크. //로그인 때 마다 accessToken 발급. 만료되었다면, refresh
+    public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(service.authenticate(request));
-
-    }
-    // 아래 링크를 참조할 것
-    // https://github.com/letelumiere/squadmania/blob/main/src/main/java/com/likeurator/squadmania/domain/UserController.java
-    @GetMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody AuthenticationRequest request){
-        return ResponseEntity.ok(service.refresh(request));
     }
 
-    @GetMapping("/logout")
-    public ResponseEntity<AuthenticationResponse> logout(){
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody AuthenticationRequest request){{
         return null;
-    }
-    private void reliveUserinfo(Long id, String email){
-        
-    }
-    
-//    public ResponseEntity<Userinfo> deleteAccount(@PathVariable long id){    //추후에 requestBody 넣을 것
-//        Userinfo user = userService.getUserReferencedById(id);
-//        userService.signOutUser(user);
-//        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-//    }
-
-
+    }}
 
 }

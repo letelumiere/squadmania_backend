@@ -33,28 +33,12 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public String generateRefreshToken(UserDetails userDetails){
-        return generateRefreshToken(new HashMap<>(), userDetails);
-    }
-
-
     public String generateToken(Map <String, Object> extractClaims, UserDetails userDetails){
         return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))   //login_at으로 들어가짐. 바꿔야 함
-                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
-            .compact();
-    }
-
-    //임시 메서드
-    public String generateRefreshToken(Map <String, Object> extractClaims, UserDetails userDetails){
-        return Jwts.builder()
-                .setClaims(extractClaims)
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 30000 * 60 * 24))   //login_at으로 들어가짐. 바꿔야 함
+                .setExpiration(new Date(System.currentTimeMillis() + 300 * 60 * 24))   //login_at으로 들어가짐. 바꿔야 함
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }

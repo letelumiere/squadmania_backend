@@ -8,10 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AuthenticationRequest {
-    @Column(name="email_id")
+    @Column(name = "email_id")
     private String email_id;
     
-    @Column(name="password")
+    @Column(name = "password")
     private String password;
 }
 
