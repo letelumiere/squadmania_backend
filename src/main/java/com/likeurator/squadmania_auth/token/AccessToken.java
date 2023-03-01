@@ -27,8 +27,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-public class Token {
+@Entity(name = "access_token")
+public class AccessToken {
 
     @Id
     @GeneratedValue
@@ -46,7 +46,4 @@ public class Token {
     @JoinColumn(name = "user_id")
     private Userinfo userinfo;
 
-    @OneToOne
-    @JoinColumn(name = "refresh_token_id")
-    private RefreshToken refreshTokenId;
 }

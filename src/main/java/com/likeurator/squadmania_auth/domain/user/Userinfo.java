@@ -4,7 +4,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import com.likeurator.squadmania_auth.token.Token;
+import com.likeurator.squadmania_auth.token.AccessToken;
+import com.likeurator.squadmania_auth.token.RefreshToken;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.GeneratedColumn;
@@ -90,7 +92,11 @@ public class Userinfo implements UserDetails {
     private Role role;
 
     @OneToMany(mappedBy = "userinfo")
-    private List<Token> tokens;
+    private List<AccessToken> accessTokens;
+    
+    @OneToMany(mappedBy = "userinfo")
+    private List<RefreshToken> refreshTokens;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

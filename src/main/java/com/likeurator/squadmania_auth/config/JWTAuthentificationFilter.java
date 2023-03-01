@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.likeurator.squadmania_auth.token.TokenRepository;
+import com.nimbusds.oauth2.sdk.RefreshTokenGrant;
 
 import io.jsonwebtoken.Jwts;
 

@@ -23,22 +23,23 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity(name = "refresh_token")
 public class RefreshToken {
 
     @Id
     @GeneratedValue
     public Long id;
 
-    @Column(name = "refresh_token", unique = true)  //token발급 기간이 expired 되었는지 여부
-    public String refreshToken;
+    @Column(unique = true)  //token발급 기간이 expired 되었는지 여부
+    public String token;
 
     @Enumerated(EnumType.STRING)
     public TokenType tokenType = TokenType.BEARER;
     public boolean revoked;
     public boolean expired;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Userinfo userinfo;
 
-    @OneToOne
-    @JoinColumn(name = "token")
-    public Token token;
 }
