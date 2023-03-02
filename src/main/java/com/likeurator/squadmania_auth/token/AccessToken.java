@@ -34,7 +34,7 @@ public class AccessToken {
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)  
+    @Column(name = "token", unique = true)  
     private String token;
 
     @Enumerated(EnumType.STRING)

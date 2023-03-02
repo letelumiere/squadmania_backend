@@ -49,7 +49,6 @@ public class JwtService {
 
     public String generateRefreshToken(Map <String, Object> extractClaims, String accessToken){
         return Jwts.builder()
-                .setClaims(extractAllClaims(accessToken))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 3000 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)

@@ -8,12 +8,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
+import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
 import com.likeurator.squadmania_auth.token.TokenRepository;
 
 @Service
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
     private final TokenRepository tokenRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -29,6 +31,8 @@ public class LogoutService implements LogoutHandler {
             storedToken.setRevoked(true);
             tokenRepository.save(storedToken);
             SecurityContextHolder.clearContext();
-        }
+        }     
+
+
     }
 }

@@ -63,7 +63,7 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(token);
         revokeAllUserTokens(user);
         saveUserToken(user, token, refreshToken);
-
+        
         return AuthenticationResponse.builder().accessToken(token).refreshToken(refreshToken).build();
     }
 
@@ -81,15 +81,12 @@ public class AuthenticationService {
             .expired(false)
             .revoked(false)
             .build();
-
         tokenRepository.save(accessToken);
 
         var refreshToken = RefreshToken.builder()
             .userinfo(user)
             .token(jwtRefreshToken)
-            .tokenType(TokenType.BEARER)
             .expired(false)
-            .revoked(false)
             .build();
         refreshRepository.save(refreshToken);
     }

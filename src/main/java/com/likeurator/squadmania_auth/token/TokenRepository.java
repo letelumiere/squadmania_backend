@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 public interface TokenRepository extends JpaRepository<AccessToken, Long> {
     @Query(value = """
@@ -15,12 +14,5 @@ public interface TokenRepository extends JpaRepository<AccessToken, Long> {
     """, nativeQuery = true)                    
     List<AccessToken> findAllValidTokenByUser(Long id);
     Optional<AccessToken> findByToken(String token);
-
-    @Query(value = """
-        select a.id, a.user_id, a.token as access_token, r.token as refresh_token 
-            from access_token a join refresh_token r 
-            where a.user_id = r.user_id;
-    """, nativeQuery = true)
-    Optional<AccessToken> findRefreshTokenByUser(Long id);
 
 }
