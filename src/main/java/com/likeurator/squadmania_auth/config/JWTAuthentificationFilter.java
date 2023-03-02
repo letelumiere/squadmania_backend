@@ -37,7 +37,6 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-        
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
         }else{
@@ -50,8 +49,7 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
                     .map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
 
-                
-                if(jwtService.isTokenValid(jwt, userDetails) && isTokenValid){
+                if(jwtService.isTokenValid(jwt, userDetails) && isTokenValid){                    
                     UsernamePasswordAuthenticationToken authToken = 
                         new UsernamePasswordAuthenticationToken(
                             userDetails,
