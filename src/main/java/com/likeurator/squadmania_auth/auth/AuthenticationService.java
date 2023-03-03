@@ -34,6 +34,8 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
+
+    //DB에 등록. 토큰 생성
     public AuthenticationResponse register(RegisterRequest request) {
         var user = Userinfo.builder()
             .emailId(request.getEmail_id())
@@ -50,6 +52,7 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().accessToken(jwtToken).refreshToken(refreshToken).build(); 
     }
     
+    //새로운 accessToken과 refreshToken 생성
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(

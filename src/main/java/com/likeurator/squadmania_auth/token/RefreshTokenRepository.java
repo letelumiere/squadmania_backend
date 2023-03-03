@@ -8,7 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long>{
-    List<RefreshToken> findAllValidTokenByUser(Long id);
+
+
+    @Query(value ="""
+        select r.*
+            from refresh_token r inner join userinfo u
+            on r.id =  u.id
+        where u.email_id = ?
+    """, nativeQuery = true)
     Optional<RefreshToken> findByToken(String token);
 
 }
