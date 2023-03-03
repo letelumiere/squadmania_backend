@@ -55,18 +55,23 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
             if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+                //case1 : access token과 refresh token 모두가 만료된 경우 → 에러 발생 (재 로그인하여 둘다 새로 발급)
                 var isTokenValid = tokenRepository.findByToken(jwt)
                     .map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
 
-                var isRefreshExpired = refreshTokenRepository.findByToken(userEmail)
+                var isRefreshExpired = refreshTokenRepository.findByUserEmail(userEmail)
                     .map(t -> !t.isExpired())
                     .orElse(false);
 
-                    //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
-                if(jwtService.isTokenValid(jwt, userDetails) && (isTokenValid && isRefreshExpired)){
-                    System.out.println("haha"+" "+isRefreshExpired);
-                    
+                //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
+                if(!isRefreshExpired) jwtService.generateRefreshToken(userDetails);
+
+                //case2 : access token은 만료됐지만, refresh token은 유효한 경우 →  refresh token을 검증하여 access token 재발급
+                if(!isTokenValid) jwtService.generateToken(userDetails);
+
+                //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
+                if(jwtService.isTokenValid(jwt, userDetails) && isTokenValid){
                     UsernamePasswordAuthenticationToken authToken = 
                         new UsernamePasswordAuthenticationToken(userDetails,
                             null,
@@ -76,19 +81,7 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
                         new WebAuthenticationDetailsSource().buildDetails(request)
                     );
                     SecurityContextHolder.getContext().setAuthentication(authToken);
-
-                //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
-                }else{
-                    if(!isRefreshExpired){
-                        System.out.println("refresh Error");
-                    //case2 : access token은 만료됐지만, refresh token은 유효한 경우 →  refresh token을 검증하여 access token 재발급
-                    }else if(!isTokenValid){
-                        log.info("tokenInvalid");
-                    //case1 : access token과 refresh token 모두가 만료된 경우 → 에러 발생 (재 로그인하여 둘다 새로 발급)
-                    }else{
-                        log.info("XD");
-                    }
-                }
+                }    
             }
             filterChain.doFilter(request, response);
         }   

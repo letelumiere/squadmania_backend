@@ -46,7 +46,7 @@ public class AuthenticationService {
 
         var savedUser = repository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(jwtToken);
+        var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken, refreshToken);
 
         return AuthenticationResponse.builder().accessToken(jwtToken).refreshToken(refreshToken).build(); 
@@ -63,7 +63,7 @@ public class AuthenticationService {
         var user = repository.findByEmail(request.getEmail_id())
             .orElseThrow();
         var token = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(token);
+        var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, token, refreshToken);
         
@@ -93,6 +93,8 @@ public class AuthenticationService {
             .build();
         refreshRepository.save(refreshToken);
     }
+
+
 
     
     //logout처리용 메서드

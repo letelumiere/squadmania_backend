@@ -10,12 +10,12 @@ import org.springframework.data.jpa.repository.Query;
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long>{
 
 
-    @Query(value ="""
+    @Query(value = """
         select r.*
             from refresh_token r inner join userinfo u
             on r.id =  u.id
         where u.email_id = ?
     """, nativeQuery = true)
+    Optional<RefreshToken> findByUserEmail(String email);
     Optional<RefreshToken> findByToken(String token);
-
 }

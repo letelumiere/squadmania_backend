@@ -33,6 +33,13 @@ public class LogoutService implements LogoutHandler {
             SecurityContextHolder.clearContext();
         }     
 
-
+        String userName = storedToken.getUserinfo().getUsername();
+        var refreshToken = refreshTokenRepository.findByUserEmail(userName)
+            .orElse(null);
+        if(refreshToken != null){
+            refreshToken.setExpired(true);
+            refreshTokenRepository.save(refreshToken);
+            SecurityContextHolder.clearContext();
+        }
     }
 }

@@ -33,8 +33,8 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     }
 
-    public String generateRefreshToken(String accessToken){
-        return generateRefreshToken(new HashMap<>(), accessToken);
+    public String generateRefreshToken(UserDetails userDetails){
+        return generateRefreshToken(new HashMap<>(), userDetails);
     }
 
     public String generateToken(Map <String, Object> extractClaims, UserDetails userDetails){
@@ -47,7 +47,7 @@ public class JwtService {
             .compact();
     }
 
-    public String generateRefreshToken(Map <String, Object> extractClaims, String accessToken){
+    public String generateRefreshToken(Map <String, Object> extractClaims, UserDetails userDetails){
         return Jwts.builder()
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 3000 * 60 * 24))
