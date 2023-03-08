@@ -8,7 +8,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long>{
-
+    @Query(value = """
+        select r.*
+            from refresh_token r inner join userinfo u
+	            on r.id = u.id
+            where u.id = r.user_id AND r.expired='false'
+    """, nativeQuery = true)                    
+    List<RefreshToken> findAllValidTokenByUser(Long id);
 
     @Query(value = """
         select r.*

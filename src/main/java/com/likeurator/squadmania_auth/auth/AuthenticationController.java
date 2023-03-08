@@ -30,9 +30,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody AuthenticationRequest request){{
-        return null;
-    }}
-
 }

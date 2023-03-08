@@ -21,9 +21,11 @@ import com.likeurator.squadmania_auth.token.TokenType;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
     private final UserRepository repository;
     private final TokenRepository tokenRepository;
@@ -61,17 +63,13 @@ public class AuthenticationService {
             )
         );
         var user = repository.findByEmail(request.getEmail_id())
-            .orElseThrow();
+            .orElseThrow(null);
         var token = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         revokeAllUserTokens(user);
         saveUserToken(user, token, refreshToken);
-        
+    
         return AuthenticationResponse.builder().accessToken(token).refreshToken(refreshToken).build();
-    }
-
-    public void refresh(AuthenticationRequest request){
-        
     }
 
     //토큰 저장 메서드 -> accessToken은 localStorage에 저장될 예정(?)
@@ -95,11 +93,11 @@ public class AuthenticationService {
     }
 
 
-
-    
     //logout처리용 메서드
     private void revokeAllUserTokens(Userinfo user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+        var validRefreshTokens = refreshRepository.findAllValidTokenByUser(user.getId());
+
         if(validUserTokens.isEmpty()) return;
         
         validUserTokens.forEach(token -> {
@@ -107,5 +105,13 @@ public class AuthenticationService {
             token.setRevoked(true);
         });
         tokenRepository.saveAll(validUserTokens);
+
+        if(validRefreshTokens.isEmpty()) return;
+
+        validRefreshTokens.forEach(token -> {
+            token.setExpired(true);
+        });
+
+        refreshRepository.saveAll(validRefreshTokens);
     }
 }
