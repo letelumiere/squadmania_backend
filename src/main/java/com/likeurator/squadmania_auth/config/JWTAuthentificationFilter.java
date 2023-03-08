@@ -82,10 +82,11 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
                     //jwt에서 setRevoked()
                     //jwtService.generateToken(userDetails);
                     //accessToken = tokenRepository.findByToken();
+                    accessToken = jwt;                
                 }else{
+                    accessToken = jwt;                
                 }
                 
-                accessToken = jwt;                
                 if(jwtService.isTokenValid(accessToken, userDetails) && isTokenValid){
                     UsernamePasswordAuthenticationToken authToken = 
                         new UsernamePasswordAuthenticationToken(userDetails,
