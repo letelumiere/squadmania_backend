@@ -11,9 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RefreshRequest {
-    @Column(name="email_id")
-    private String email_id;
-
     @Column(name = "access_token")
     private String accessToken;
 

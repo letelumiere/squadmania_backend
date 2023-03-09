@@ -82,50 +82,63 @@ public class AuthenticationService {
     public AuthenticationResponse refresh(RefreshRequest request) {
         String userName = jwtService.extractUsername(request.getAccessToken());
         UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+        var accessToken = "";
+        var refreshToken = "";
 
         var user = userRepository.findByEmail(userName)
-        .orElseThrow(null);
+            .orElseThrow(null);
 
         if(!jwtService.isTokenValid(request.getAccessToken(), userDetails)){
-            var token = tokenRepository.findByToken(request.getAccessToken())
+            var token = tokenRepository.findByToken(accessToken)
                 .orElseThrow(null);
 
             token.setExpired(true);
             token.setRevoked(true);
+            accessToken = jwtService.generateToken(userDetails);
+            
             tokenRepository.save(token);
         }
         
         if(!jwtService.isTokenValid(request.getRefreshToken(), userDetails)){
-            var token = refreshRepository.findByToken(request.getRefreshToken())
+            var token = refreshRepository.findByToken(refreshToken)
                 .orElseThrow(null);
+
             token.setExpired(true);
+            refreshToken = jwtService.generateRefreshToken(userDetails);
+
             refreshRepository.save(token);
         }
-        var accessToken = jwtService.generateToken(userDetails);
-        var refreshToken = jwtService.generateRefreshToken(userDetails);
 
         saveUserToken(user, accessToken, refreshToken);
+
+        if(accessToken.equals("")) accessToken = request.getAccessToken();
+        if(refreshToken.equals("")) refreshToken = request.getRefreshToken();
+
         return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
     //토큰 저장 메서드 -> accessToken은 localStorage 혹은 redis 저장될 예정. 지금은 sql로.
     //아마 OAuth2.0 적용하면서 한번 더 갈아야 할지도. 
     private void saveUserToken(Userinfo user, String jwtToken, String jwtRefreshToken) {
-        var accessToken = AccessToken.builder()
-            .userinfo(user)
-            .token(jwtToken)
-            .tokenType(TokenType.BEARER)
-            .expired(false)
-            .revoked(false)
-            .build();
-        tokenRepository.save(accessToken);
+        if(jwtToken.equals("")){
+            var accessToken = AccessToken.builder()
+                .userinfo(user)
+                .token(jwtToken)
+                .tokenType(TokenType.BEARER)
+                .expired(false)
+                .revoked(false)
+                .build();
+            tokenRepository.save(accessToken);
+        }
 
-        var refreshToken = RefreshToken.builder()
-            .userinfo(user)
-            .token(jwtRefreshToken)
-            .expired(false)
-            .build();
-        refreshRepository.save(refreshToken);
+        if(jwtRefreshToken.equals("")){
+            var refreshToken = RefreshToken.builder()
+                .userinfo(user)
+                .token(jwtRefreshToken)
+                .expired(false)
+                .build();
+            refreshRepository.save(refreshToken);
+        }
     }
 
     private void revokeAllUserTokens(Userinfo user) {
