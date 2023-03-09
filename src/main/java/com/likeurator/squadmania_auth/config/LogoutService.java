@@ -37,7 +37,7 @@ public class LogoutService implements LogoutHandler {
 
             var refreshToken = refreshTokenRepository.findByUserEmail(
                         storedToken.getUserinfo().getUsername()
-                    )
+                )
                 .orElse(null);
 
             if(refreshToken != null){

@@ -6,8 +6,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.security.Security;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -21,16 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.likeurator.squadmania_auth.token.TokenRepository;
-import com.likeurator.squadmania_auth.token.TokenType;
-import com.likeurator.squadmania_auth.token.AccessToken;
-import com.likeurator.squadmania_auth.token.RefreshToken;
-import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
-import com.likeurator.squadmania_auth.auth.AuthenticationService;
-
-
-import com.nimbusds.oauth2.sdk.RefreshTokenGrant;
-
-import io.jsonwebtoken.Jwts;
 
 
 @Component
@@ -40,8 +28,6 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
-
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
@@ -49,7 +35,7 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-        
+                
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
         }else{
@@ -61,11 +47,7 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
                 var isTokenValid = tokenRepository.findByToken(jwt)
                     .map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
-                var isRefreshExpired = refreshTokenRepository.findByUserEmail(userEmail)
-                    .map(t -> !t.isExpired())
-                    .orElse(false);
-                
-                    
+
                 if(jwtService.isTokenValid(jwt, userDetails) && isTokenValid){
                     UsernamePasswordAuthenticationToken authToken = 
                         new UsernamePasswordAuthenticationToken(userDetails,

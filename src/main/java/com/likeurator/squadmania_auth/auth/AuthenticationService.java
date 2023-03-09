@@ -1,12 +1,12 @@
 package com.likeurator.squadmania_auth.auth;
 
-import java.util.Optional;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 import com.likeurator.squadmania_auth.config.JwtService;
 import com.likeurator.squadmania_auth.domain.user.Role;
@@ -27,13 +27,14 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class AuthenticationService {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
     private final TokenRepository tokenRepository;
     private final RefreshTokenRepository refreshRepository;
 
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-
+    private final UserDetailsService userDetailsService;
+    
     private final AuthenticationManager authenticationManager;
 
 
@@ -44,9 +45,9 @@ public class AuthenticationService {
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.USER)
             .build();
-        repository.save(user);
+        userRepository.save(user);
 
-        var savedUser = repository.save(user);
+        var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserToken(savedUser, jwtToken, refreshToken);
@@ -62,7 +63,7 @@ public class AuthenticationService {
                 request.getPassword()
             )
         );
-        var user = repository.findByEmail(request.getEmail_id())
+        var user = userRepository.findByEmail(request.getEmail_id())
             .orElseThrow(null);
         var token = jwtService.generateToken(user);
         var refreshToken = jwtService.generateRefreshToken(user);
@@ -76,36 +77,39 @@ public class AuthenticationService {
     //case2 : access token은 만료됐지만, refresh token은 유효한 경우 →  refresh token을 검증하여 access token 재발급
     //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
     //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
+    //**보완해야 할 것 = 해당 token의 expired 여부. //내일 테스트하자
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
     public AuthenticationResponse refresh(RefreshRequest request) {
+        String userName = jwtService.extractUsername(request.getAccessToken());
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
 
-        if(request.getAccessToken() != null){
+        var user = userRepository.findByEmail(userName)
+        .orElseThrow(null);
+
+        if(!jwtService.isTokenValid(request.getAccessToken(), userDetails)){
             var token = tokenRepository.findByToken(request.getAccessToken())
                 .orElseThrow(null);
+
             token.setExpired(true);
             token.setRevoked(true);
             tokenRepository.save(token);
         }
         
-        if(request.getRefreshToken() != null){
+        if(!jwtService.isTokenValid(request.getRefreshToken(), userDetails)){
             var token = refreshRepository.findByToken(request.getRefreshToken())
                 .orElseThrow(null);
             token.setExpired(true);
             refreshRepository.save(token);
         }
-        var user = repository.findByEmail(request.getEmail_id())
-            .orElseThrow(null);
+        var accessToken = jwtService.generateToken(userDetails);
+        var refreshToken = jwtService.generateRefreshToken(userDetails);
 
-        var accessToken = jwtService.generateToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
-        
         saveUserToken(user, accessToken, refreshToken);
-
         return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
-    //토큰 저장 메서드 -> accessToken은 localStorage에 저장될 예정(?)
-    //최초에는 
+    //토큰 저장 메서드 -> accessToken은 localStorage 혹은 redis 저장될 예정. 지금은 sql로.
+    //아마 OAuth2.0 적용하면서 한번 더 갈아야 할지도. 
     private void saveUserToken(Userinfo user, String jwtToken, String jwtRefreshToken) {
         var accessToken = AccessToken.builder()
             .userinfo(user)
