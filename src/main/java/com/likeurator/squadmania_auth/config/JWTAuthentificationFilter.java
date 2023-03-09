@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.likeurator.squadmania_auth.token.TokenRepository;
+import com.likeurator.squadmania_auth.token.TokenType;
+import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.RefreshToken;
 import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
 import com.likeurator.squadmania_auth.auth.AuthenticationService;
@@ -36,7 +38,6 @@ import io.jsonwebtoken.Jwts;
 @Slf4j
 public class JWTAuthentificationFilter extends OncePerRequestFilter{
     private final JwtService jwtService;
-    private final AuthenticationService authService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -69,25 +70,57 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
                 //case2 : access token은 만료됐지만, refresh token은 유효한 경우 →  refresh token을 검증하여 access token 재발급
                 //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
                 //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
+                System.out.println("isRefreshExpired : "+ isRefreshExpired);
+                System.out.println("isTokenValid : "+ isTokenValid);
+
 
                 if(!isRefreshExpired){                
-                    var refreshToken = refreshTokenRepository.findByUserEmail(userEmail);
-                    //refreshToken에서 setExpired()
-                    //refreshTokenRepository.save(refreshToken);
-                    //jwtService.generateRefreshToken(userDetails);
+                    var token = refreshTokenRepository.findByUserEmail(userEmail)
+                        .orElse(null);
+                    String newToken = "";
+                    
+                    if(token!=null){
+                        token.setExpired(true);
+                        refreshTokenRepository.save(token);  //여기가 문제. duplicated됨
+
+                        newToken = jwtService.generateRefreshToken(userDetails);
+                        
+                        token = RefreshToken.builder()
+                            .userinfo(token.getUserinfo())
+                            .token(newToken)
+                            .expired(false)
+                            .build();
+                        refreshTokenRepository.save(token);    
+                    }
                 }
 
                 if(!isTokenValid){
-                    //jwt에서 setExpired()
-                    //jwt에서 setRevoked()
-                    //jwtService.generateToken(userDetails);
-                    //accessToken = tokenRepository.findByToken();
-                    accessToken = jwt;                
+                    var token = tokenRepository.findByToken(jwt)
+                        .orElse(null);
+                    String newToken = "";
+
+                    if(token!=null){
+                        token.setExpired(true);
+                        token.setRevoked(true);
+                        tokenRepository.save(token);    //여기가 문제. duplicated됨
+                        newToken = jwtService.generateToken(userDetails);
+
+                        var token2 = AccessToken.builder()
+                            .userinfo(token.getUserinfo())
+                            .token(newToken)
+                            .tokenType(TokenType.BEARER)
+                            .expired(false)
+                            .revoked(false)
+                            .build();
+                        tokenRepository.save(token2);                     
+                        newToken = token2.getToken();
+                    }
+                    accessToken = newToken;
                 }else{
-                    accessToken = jwt;                
+                    accessToken = jwt;
                 }
-                
-                if(jwtService.isTokenValid(accessToken, userDetails) && isTokenValid){
+
+                if(jwtService.isTokenValid(accessToken, userDetails)){
                     UsernamePasswordAuthenticationToken authToken = 
                         new UsernamePasswordAuthenticationToken(userDetails,
                             null,

@@ -29,14 +29,16 @@ public class LogoutService implements LogoutHandler {
         jwt = authHeader.substring(7);
         var storedToken = tokenRepository.findByToken(jwt)
             .orElse(null);
-        var refreshToken = refreshTokenRepository.findByUserEmail(storedToken.getUserinfo().getUsername())
-            .orElse(null);
-
 
         if(storedToken != null){
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
             tokenRepository.save(storedToken);
+
+            var refreshToken = refreshTokenRepository.findByUserEmail(
+                        storedToken.getUserinfo().getUsername()
+                    )
+                .orElse(null);
 
             if(refreshToken != null){
                 refreshToken.setExpired(true);
