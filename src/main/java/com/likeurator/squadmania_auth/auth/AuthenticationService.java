@@ -72,6 +72,38 @@ public class AuthenticationService {
         return AuthenticationResponse.builder().accessToken(token).refreshToken(refreshToken).build();
     }
 
+    //case1 : access token과 refresh token 모두가 만료된 경우 → 에러 발생 (재 로그인하여 둘다 새로 발급)
+    //case2 : access token은 만료됐지만, refresh token은 유효한 경우 →  refresh token을 검증하여 access token 재발급
+    //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
+    //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
+    //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
+    public AuthenticationResponse refresh(RefreshRequest request) {
+
+        if(request.getAccessToken() != null){
+            var token = tokenRepository.findByToken(request.getAccessToken())
+                .orElseThrow(null);
+            token.setExpired(true);
+            token.setRevoked(true);
+            tokenRepository.save(token);
+        }
+        
+        if(request.getRefreshToken() != null){
+            var token = refreshRepository.findByToken(request.getRefreshToken())
+                .orElseThrow(null);
+            token.setExpired(true);
+            refreshRepository.save(token);
+        }
+        var user = repository.findByEmail(request.getEmail_id())
+            .orElseThrow(null);
+
+        var accessToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        
+        saveUserToken(user, accessToken, refreshToken);
+
+        return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+    }
+
     //토큰 저장 메서드 -> accessToken은 localStorage에 저장될 예정(?)
     //최초에는 
     private void saveUserToken(Userinfo user, String jwtToken, String jwtRefreshToken) {
@@ -92,8 +124,6 @@ public class AuthenticationService {
         refreshRepository.save(refreshToken);
     }
 
-
-    //logout처리용 메서드
     private void revokeAllUserTokens(Userinfo user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         var validRefreshTokens = refreshRepository.findAllValidTokenByUser(user.getId());
@@ -114,4 +144,6 @@ public class AuthenticationService {
 
         refreshRepository.saveAll(validRefreshTokens);
     }
+
+
 }

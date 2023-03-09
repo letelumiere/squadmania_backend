@@ -49,8 +49,7 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-        final String accessToken;
-
+        
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
         }else{
@@ -66,61 +65,8 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
                     .map(t -> !t.isExpired())
                     .orElse(false);
                 
-                //case1 : access token과 refresh token 모두가 만료된 경우 → 에러 발생 (재 로그인하여 둘다 새로 발급)
-                //case2 : access token은 만료됐지만, refresh token은 유효한 경우 →  refresh token을 검증하여 access token 재발급
-                //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
-                //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
-                System.out.println("isRefreshExpired : "+ isRefreshExpired);
-                System.out.println("isTokenValid : "+ isTokenValid);
-
-
-                if(!isRefreshExpired){                
-                    var token = refreshTokenRepository.findByUserEmail(userEmail)
-                        .orElse(null);
-                    String newToken = "";
                     
-                    if(token!=null){
-                        token.setExpired(true);
-                        refreshTokenRepository.save(token);  //여기가 문제. duplicated됨
-
-                        newToken = jwtService.generateRefreshToken(userDetails);
-                        
-                        token = RefreshToken.builder()
-                            .userinfo(token.getUserinfo())
-                            .token(newToken)
-                            .expired(false)
-                            .build();
-                        refreshTokenRepository.save(token);    
-                    }
-                }
-
-                if(!isTokenValid){
-                    var token = tokenRepository.findByToken(jwt)
-                        .orElse(null);
-                    String newToken = "";
-
-                    if(token!=null){
-                        token.setExpired(true);
-                        token.setRevoked(true);
-                        tokenRepository.save(token);    //여기가 문제. duplicated됨
-                        newToken = jwtService.generateToken(userDetails);
-
-                        var token2 = AccessToken.builder()
-                            .userinfo(token.getUserinfo())
-                            .token(newToken)
-                            .tokenType(TokenType.BEARER)
-                            .expired(false)
-                            .revoked(false)
-                            .build();
-                        tokenRepository.save(token2);                     
-                        newToken = token2.getToken();
-                    }
-                    accessToken = newToken;
-                }else{
-                    accessToken = jwt;
-                }
-
-                if(jwtService.isTokenValid(accessToken, userDetails)){
+                if(jwtService.isTokenValid(jwt, userDetails) && isTokenValid){
                     UsernamePasswordAuthenticationToken authToken = 
                         new UsernamePasswordAuthenticationToken(userDetails,
                             null,
