@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import com.likeurator.squadmania_auth.config.JwtService;
 import com.likeurator.squadmania_auth.domain.user.Role;
 import com.likeurator.squadmania_auth.domain.user.UserRepository;
-
+import com.likeurator.squadmania_auth.domain.user.UserService;
 import com.likeurator.squadmania_auth.domain.user.Userinfo;
 import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.RefreshToken;
@@ -19,6 +19,7 @@ import com.likeurator.squadmania_auth.token.TokenRepository;
 import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
 import com.likeurator.squadmania_auth.token.TokenType;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
 import lombok.extern.slf4j.Slf4j;
@@ -37,9 +38,8 @@ public class AuthenticationService {
     
     private final AuthenticationManager authenticationManager;
 
-
     //DB에 등록. 토큰 생성
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request)  {
         var user = Userinfo.builder()
             .emailId(request.getEmail_id())
             .password(passwordEncoder.encode(request.getPassword()))
@@ -77,50 +77,52 @@ public class AuthenticationService {
     //case2 : access token은 만료됐지만, refresh token은 유효한 경우 →  refresh token을 검증하여 access token 재발급
     //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
     //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
-    //**보완해야 할 것 = 해당 token의 expired 여부. //내일 테스트하자
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
-    public AuthenticationResponse refresh(RefreshRequest request) {
-        String userName = jwtService.extractUsername(request.getAccessToken());
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-        var accessToken = "";
-        var refreshToken = "";
-
-        var user = userRepository.findByEmail(userName)
-            .orElseThrow(null);
-
-        if(!jwtService.isTokenValid(request.getAccessToken(), userDetails)){
-            var token = tokenRepository.findByToken(accessToken)
-                .orElseThrow(null);
-
-            token.setExpired(true);
-            token.setRevoked(true);
-            accessToken = jwtService.generateToken(userDetails);
-            
-            tokenRepository.save(token);
-        }
+    public AuthenticationResponse refresh(RestRequest request) throws NullPointerException {
+        System.out.println(request.getEmail_id());
+        System.out.println(request.getAccessToken());
         
-        if(!jwtService.isTokenValid(request.getRefreshToken(), userDetails)){
-            var token = refreshRepository.findByToken(refreshToken)
-                .orElseThrow(null);
+        var user = userRepository.findByEmail(request.getEmail_id())
+            .orElseThrow(null);
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getEmail_id());
+        String accessToken = request.getAccessToken();
+        String refreshToken = request.getRefreshToken();
+        
+        if(!jwtService.isTokenValid(accessToken, userDetails) || !jwtService.isTokenValid(refreshToken, userDetails)){
 
-            token.setExpired(true);
-            refreshToken = jwtService.generateRefreshToken(userDetails);
+            if(!jwtService.isTokenValid(accessToken, userDetails)){
+                var token = tokenRepository.findByToken(accessToken)
+                    .orElseThrow(null);
+                token.setExpired(true);
+                token.setRevoked(true);
+                tokenRepository.save(token);
 
-            refreshRepository.save(token);
+                accessToken = jwtService.generateToken(userDetails);            
+            }else{
+                accessToken = "";
+            }
+
+            if(!jwtService.isTokenValid(refreshToken, userDetails)){
+                var token = refreshRepository.findByToken(refreshToken)
+                    .orElseThrow(null);
+                token.setExpired(true);
+                refreshRepository.save(token);
+    
+                refreshToken = jwtService.generateRefreshToken(userDetails);
+            }else{
+                refreshToken = "";
+            }
+
+            saveUserToken(user, accessToken, refreshToken);    
         }
-
-        saveUserToken(user, accessToken, refreshToken);
-
-        if(accessToken.equals("")) accessToken = request.getAccessToken();
-        if(refreshToken.equals("")) refreshToken = request.getRefreshToken();
-
+    
         return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
     //토큰 저장 메서드 -> accessToken은 localStorage 혹은 redis 저장될 예정. 지금은 sql로.
     //아마 OAuth2.0 적용하면서 한번 더 갈아야 할지도. 
     private void saveUserToken(Userinfo user, String jwtToken, String jwtRefreshToken) {
-        if(jwtToken.equals("")){
+        if(!jwtToken.equals("")){
             var accessToken = AccessToken.builder()
                 .userinfo(user)
                 .token(jwtToken)
@@ -131,7 +133,7 @@ public class AuthenticationService {
             tokenRepository.save(accessToken);
         }
 
-        if(jwtRefreshToken.equals("")){
+        if(!jwtRefreshToken.equals("")){
             var refreshToken = RefreshToken.builder()
                 .userinfo(user)
                 .token(jwtRefreshToken)
@@ -140,6 +142,7 @@ public class AuthenticationService {
             refreshRepository.save(refreshToken);
         }
     }
+
 
     private void revokeAllUserTokens(Userinfo user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());

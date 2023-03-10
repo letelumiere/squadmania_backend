@@ -42,15 +42,17 @@ public class JwtService {
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 10 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 20 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }
 
     public String generateRefreshToken(Map <String, Object> extractClaims, UserDetails userDetails){
         return Jwts.builder()
+                .setClaims(extractClaims)
+                .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 20 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 300 * 60 * 24))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }

@@ -4,14 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.likeurator.squadmania_auth.domain.user.Userinfo;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -32,8 +36,7 @@ public class AuthenticationController {
 
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
     @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody RefreshRequest request){
-        return ResponseEntity.ok(service.refresh(request));
+    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody RestRequest request) {
+            return ResponseEntity.ok(service.refresh(request));
     }
-
 }

@@ -23,31 +23,31 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfiguration {
     
     private final JWTAuthentificationFilter jwtAuthFilter;
+//    private final JwtExceptionFilter jwtExceptionFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
 
     //loginform 추가 필요
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf()
-            .disable()
+        http.csrf().disable()
             .authorizeHttpRequests()
-            .requestMatchers("/api/v1/auth/**")
-                .permitAll()
-            .anyRequest()
-                .authenticated()
+                .requestMatchers("/api/v1/auth/**").permitAll()
+            .and()
+            .authorizeHttpRequests()
+                .requestMatchers("/api/v1/demo-controller").authenticated()
             .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
-            .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            .logout()
-            .logoutUrl("/api/v1/auth/logout")
-            .addLogoutHandler(logoutHandler)
-            .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-        ;
+                .authenticationProvider(authenticationProvider)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+  //              .addFilterBefore(jwtExceptionFilter, JWTAuthentificationFilter.class)
+                .logout()
+                    .logoutUrl("/api/v1/auth/logout")
+                    .addLogoutHandler(logoutHandler)
+                    .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
+            ;
     
         return http.build();
     }
