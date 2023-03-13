@@ -19,7 +19,6 @@ import com.likeurator.squadmania_auth.token.TokenRepository;
 import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
 import com.likeurator.squadmania_auth.token.TokenType;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
 import lombok.extern.slf4j.Slf4j;
@@ -78,10 +77,7 @@ public class AuthenticationService {
     //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
     //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
-    public AuthenticationResponse refresh(RestRequest request) throws NullPointerException {
-        System.out.println(request.getEmail_id());
-        System.out.println(request.getAccessToken());
-        
+    public AuthenticationResponse refresh(RestRequest request) {
         var user = userRepository.findByEmail(request.getEmail_id())
             .orElseThrow(null);
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getEmail_id());
@@ -142,7 +138,6 @@ public class AuthenticationService {
             refreshRepository.save(refreshToken);
         }
     }
-
 
     private void revokeAllUserTokens(Userinfo user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());

@@ -18,7 +18,10 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.likeurator.squadmania_auth.domain.user.UserRepository;
+import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.TokenRepository;
+import com.likeurator.squadmania_auth.token.TokenType;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
@@ -26,10 +29,11 @@ import io.jsonwebtoken.ExpiredJwtException;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class JWTAuthentificationFilter extends OncePerRequestFilter{
+public class JwtAuthentificationFilter extends OncePerRequestFilter{
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
@@ -37,6 +41,7 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
+        final String newToken;
 
         if(authHeader == null || !authHeader.startsWith("Bearer ")){
             filterChain.doFilter(request, response);
@@ -49,8 +54,28 @@ public class JWTAuthentificationFilter extends OncePerRequestFilter{
                 var isTokenValid = tokenRepository.findByToken(jwt)
                     .map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
+                
+                if(!jwtService.isTokenValid(jwt, userDetails) || !isTokenValid){
+                    var token = tokenRepository.findByToken(jwt)
+                        .orElseThrow(null);
+                    token.setExpired(true);
+                    token.setRevoked(true);
+                    tokenRepository.save(token);
 
+                    newToken = jwtService.generateToken(userDetails);
+                    var accessToken = AccessToken.builder()
+                        .userinfo(userRepository.findByEmail(userEmail)
+                            .orElseThrow(null))
+                        .token(newToken)
+                        .tokenType(TokenType.BEARER)
+                        .expired(false)
+                        .revoked(false)
+                    .build();
+                    tokenRepository.save(accessToken);
 
+                    request.setAttribute("Authorization", accessToken);    
+                }
+                
                 if((jwtService.isTokenValid(jwt, userDetails) && isTokenValid)){
                     UsernamePasswordAuthenticationToken authToken = 
                         new UsernamePasswordAuthenticationToken(userDetails,
