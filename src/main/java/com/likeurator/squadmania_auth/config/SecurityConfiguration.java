@@ -41,7 +41,6 @@ public class SecurityConfiguration {
         http.csrf().disable()
             .authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**").permitAll()
-                .requestMatchers("/api/v1/auth/refresh").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .sessionManagement()
