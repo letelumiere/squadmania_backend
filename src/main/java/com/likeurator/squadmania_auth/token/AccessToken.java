@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity(name = "access_token")
 public class AccessToken {
-
+    
     @Id
     @GeneratedValue
     private Long id;

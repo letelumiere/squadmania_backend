@@ -29,14 +29,14 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.register(request));
     }
 
-    @PostMapping("/authenticate")   //로그인 시 Token 체크. //로그인 때 마다 accessToken 발급. 만료되었다면, refresh
+    @PostMapping("/authenticate")   //로그인 시 Token 체크. //로그인 때 마다 accessToken 발급.
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(service.authenticate(request));
     }
 
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
     @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody RestRequest request) {
-            return ResponseEntity.ok(service.refresh(request));
+    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody RestRequest request, @RequestHeader("Authorization") String accessToken) {
+        return ResponseEntity.ok(service.refresh(request, accessToken));
     }
 }

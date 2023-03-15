@@ -19,6 +19,8 @@ import io.jsonwebtoken.security.Keys;
 @Service
 public class JwtService {        
     private final String SECRET_KEY = "472D4B6150645367566B58703273357638792F423F4528482B4D625165546857";
+    private final Long ACCESS_TOKEN_EXPIRATION = 20 * 60 * 24L;
+    private final Long REFRESH_TOKEN_EXPIRATION = 300 * 60 * 24L;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -29,20 +31,20 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateAccessToken(UserDetails userDetails){
+        return generateAccessToken(new HashMap<>(), userDetails);
     }
 
     public String generateRefreshToken(UserDetails userDetails){
         return generateRefreshToken(new HashMap<>(), userDetails);
     }
 
-    public String generateToken(Map <String, Object> extractClaims, UserDetails userDetails){
+    public String generateAccessToken(Map <String, Object> extractClaims, UserDetails userDetails){
         return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 20 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }
@@ -52,7 +54,7 @@ public class JwtService {
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 300 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
             .compact();
     }
@@ -62,12 +64,26 @@ public class JwtService {
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);  
     }
 
+    public boolean isTokenIssuer(String token, UserDetails userDetails){
+        final String username = extractUsername(token);
+        return (username.equals(userDetails.getUsername())) && !isTokenReIssuer(token);  
+    }
+
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
+    }
+    
+    private boolean isTokenReIssuer(String token){
+        Long reIssuer = extractExpiration(token).getTime()/10L;
+        return extractIssuedAt(token).after(new Date(System.currentTimeMillis() - reIssuer));
     }
 
     private Date extractExpiration(String token){
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    private Date extractIssuedAt(String token){
+        return extractClaim(token, Claims::getIssuedAt);
     }
 
     private Claims extractAllClaims(String token){

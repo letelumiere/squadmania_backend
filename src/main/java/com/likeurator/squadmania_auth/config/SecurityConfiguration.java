@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfiguration {
     
     private final JwtAuthentificationFilter jwtAuthFilter;
+    private final JwtExceptionFilter  jwtExceptionFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
 
@@ -48,6 +49,7 @@ public class SecurityConfiguration {
             .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(jwtExceptionFilter, JwtAuthentificationFilter.class)
                 .logout()
                     .logoutUrl("/api/v1/auth/logout")
                     .addLogoutHandler(logoutHandler)

@@ -24,6 +24,8 @@ import com.likeurator.squadmania_auth.token.TokenRepository;
 import com.likeurator.squadmania_auth.token.TokenType;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.security.SignatureException;
 
 
 @Component
@@ -37,58 +39,43 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter{
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
-            throws ServletException, IOException, ExpiredJwtException {
+            throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
         final String userEmail;
-        final String newToken;
 
-        if(authHeader == null || !authHeader.startsWith("Bearer ")){
+        if(!isAuthHeaderValid(authHeader) || isServletPathValid(request)){
             filterChain.doFilter(request, response);
         }else{
             jwt = authHeader.substring(7);
             userEmail = jwtService.extractUsername(jwt);
-
+            
             if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
                 UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
                 var isTokenValid = tokenRepository.findByToken(jwt)
                     .map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
                 
-                if(!jwtService.isTokenValid(jwt, userDetails) || !isTokenValid){
-                    var token = tokenRepository.findByToken(jwt)
-                        .orElseThrow(null);
-                    token.setExpired(true);
-                    token.setRevoked(true);
-                    tokenRepository.save(token);
-
-                    newToken = jwtService.generateToken(userDetails);
-                    var accessToken = AccessToken.builder()
-                        .userinfo(userRepository.findByEmail(userEmail)
-                            .orElseThrow(null))
-                        .token(newToken)
-                        .tokenType(TokenType.BEARER)
-                        .expired(false)
-                        .revoked(false)
-                    .build();
-                    tokenRepository.save(accessToken);
-
-                    request.setAttribute("Authorization", accessToken);    
-                }
-                
                 if((jwtService.isTokenValid(jwt, userDetails) && isTokenValid)){
                     UsernamePasswordAuthenticationToken authToken = 
-                        new UsernamePasswordAuthenticationToken(userDetails,
-                            null,
-                            userDetails.getAuthorities()
-                    );
-                    authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                    );
+                        new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
             }
             filterChain.doFilter(request, response);
         }   
-    }    
+    }
+
+
+    private boolean isAuthHeaderValid(String authHeader){
+        if(authHeader!=null && authHeader.startsWith("Bearer ")) return true;
+        return false;
+    }
+
+    private boolean isServletPathValid(HttpServletRequest request){
+        if(request.getServletPath().startsWith("/api/v1/auth/refresh")) return true;
+        return false;
+    }
 }

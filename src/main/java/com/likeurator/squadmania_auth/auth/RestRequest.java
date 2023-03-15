@@ -19,9 +19,9 @@ public class RestRequest {
     @Column(name="password")
     private String password;
 
-    @Column(name = "access_token")
+    @Column(name="access_token")
     private String accessToken;
-
-    @Column(name = "refresh_token")
+        
+    @Column(name="refresh_token")
     private String refreshToken;
 }
