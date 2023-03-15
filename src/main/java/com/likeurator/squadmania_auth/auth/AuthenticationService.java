@@ -45,11 +45,12 @@ public class AuthenticationService {
             .role(Role.USER)
             .build();
         userRepository.save(user);
-
         var savedUser = userRepository.save(user);
+
         var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
         saveUserAccessToken(savedUser, accessToken);
+
+        var refreshToken = jwtService.generateRefreshToken(user);        
         saveUserRefreshToken(savedUser, refreshToken);
 
         return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build(); 
@@ -58,18 +59,19 @@ public class AuthenticationService {
     //새로운 accessToken과 refreshToken 생성
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(
-                request.getEmail_id(),
-                request.getPassword()
-            )
+            new UsernamePasswordAuthenticationToken(request.getEmail_id(), request.getPassword())
         );
+
         var user = userRepository.findByEmail(request.getEmail_id())
             .orElseThrow(null);
+        revokeAllUserTokens(user);
+
         var accessToken = jwtService.generateAccessToken(user);
-        var refreshToken = jwtService.generateRefreshToken(user);
         saveUserAccessToken(user, accessToken);
+
+        var refreshToken = jwtService.generateRefreshToken(user);
         saveUserRefreshToken(user, refreshToken);
-    
+        
         return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
@@ -84,8 +86,8 @@ public class AuthenticationService {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getEmail_id());
 
         String accessToken = jwtAccessToken.substring(7);
-        String refreshToken = request.getRefreshToken();
-        
+        String refreshToken = "";
+
         System.out.println("accessToken " +accessToken);
         log.info("accessToken log = ", accessToken);
 
@@ -100,7 +102,7 @@ public class AuthenticationService {
             saveUserAccessToken(user, accessToken);
         }
 
-        if(!jwtService.isTokenValid(refreshToken, userDetails) || !refreshToken.isEmpty()){
+        if(!jwtService.isTokenValid(refreshToken, userDetails)){
             var token = refreshRepository.findByToken(refreshToken)
                 .orElseThrow(null);
             token.setExpired(true);
@@ -142,7 +144,7 @@ public class AuthenticationService {
             refreshRepository.save(refreshToken);
         }
     }    
-
+    
     private void revokeAllUserTokens(Userinfo user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         var validRefreshTokens = refreshRepository.findAllValidTokenByUser(user.getId());
