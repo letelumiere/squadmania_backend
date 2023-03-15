@@ -37,10 +37,13 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             throws ServletException, IOException, JwtException {
         try{
             filterChain.doFilter(request, response);
-        }catch(JwtException e){
-            log.error("expired", e);
+        }catch(IllegalArgumentException e){
+            log.error("400 bad Request!");
+        }catch(ExpiredJwtException e){
+            log.error("401 unathorized Request! Jwt Token Expired!");
+        }catch(SignatureException e){
+            log.error("402 payment Request!");
         }
-
     }
 
     public void setErrorResponse(HttpStatus status, HttpServletResponse response, Throwable e) throws IOException {

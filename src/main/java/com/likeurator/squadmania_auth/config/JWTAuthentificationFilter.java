@@ -44,27 +44,28 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter{
         final String jwt;
         final String userEmail;
 
-        if(!isAuthHeaderValid(authHeader) || isServletPathValid(request)){
+        if(!isAuthHeaderValid(authHeader)){
             filterChain.doFilter(request, response);
         }else{
             jwt = authHeader.substring(7);
             userEmail = jwtService.extractUsername(jwt);
-            
+      
             if(userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null){
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
-                var isTokenValid = tokenRepository.findByToken(jwt)
-                    .map(t -> !t.isExpired() && !t.isRevoked())
-                    .orElse(false);
-                
+                    UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+                    var isTokenValid = tokenRepository.findByToken(jwt)
+                        .map(t -> !t.isExpired() && !t.isRevoked())
+                        .orElse(false);
+
                 if((jwtService.isTokenValid(jwt, userDetails) && isTokenValid)){
                     UsernamePasswordAuthenticationToken authToken = 
                         new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
-
+    
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
+
+                filterChain.doFilter(request, response);
             }
-            filterChain.doFilter(request, response);
         }   
     }
 
@@ -75,7 +76,7 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter{
     }
 
     private boolean isServletPathValid(HttpServletRequest request){
-        if(request.getServletPath().startsWith("/api/v1/auth/refresh")) return true;
+        if(request.getServletPath().startsWith("/api/v1/auth/authenticate")) return true;
         return false;
     }
 }

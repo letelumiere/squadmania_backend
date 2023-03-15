@@ -57,6 +57,7 @@ public class AuthenticationService {
     }
     
     //새로운 accessToken과 refreshToken 생성
+    //jwtToken이 expired됐을 시, client에서는 header의 authorization을 null하고 authenticate로 보낸다.
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getEmail_id(), request.getPassword())
@@ -87,11 +88,8 @@ public class AuthenticationService {
 
         String accessToken = jwtAccessToken.substring(7);
         String refreshToken = "";
-
-        System.out.println("accessToken " +accessToken);
-        log.info("accessToken log = ", accessToken);
-
-        if(!jwtService.isTokenValid(accessToken, userDetails)){
+        
+        if(!jwtService.isTokenValid(accessToken, userDetails) && jwtService.isTokenIssuer(accessToken, userDetails)){
             var token = tokenRepository.findByToken(accessToken)
                 .orElseThrow(null);
             token.setExpired(true);
@@ -101,8 +99,8 @@ public class AuthenticationService {
             accessToken = jwtService.generateAccessToken(userDetails);            
             saveUserAccessToken(user, accessToken);
         }
-
-        if(!jwtService.isTokenValid(refreshToken, userDetails)){
+/*
+        if(jwtService.isTokenValid(refreshToken, userDetails) && jwtService.isTokenIssuer(refreshToken, userDetails)){
             var token = refreshRepository.findByToken(refreshToken)
                 .orElseThrow(null);
             token.setExpired(true);
@@ -111,9 +109,11 @@ public class AuthenticationService {
             refreshToken = jwtService.generateRefreshToken(userDetails);
             saveUserRefreshToken(user, refreshToken);
         }
-
+ */
     
-        return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        return AuthenticationResponse.builder().accessToken(accessToken)
+                //.refreshToken(refreshToken)
+                .build();
     }
 
     //토큰 저장 메서드 -> accessToken은 localStorage 혹은 redis 저장될 예정. 지금은 sql로.
@@ -144,7 +144,7 @@ public class AuthenticationService {
             refreshRepository.save(refreshToken);
         }
     }    
-    
+
     private void revokeAllUserTokens(Userinfo user) {
         var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
         var validRefreshTokens = refreshRepository.findAllValidTokenByUser(user.getId());

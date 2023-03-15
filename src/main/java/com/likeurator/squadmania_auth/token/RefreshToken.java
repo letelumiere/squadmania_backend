@@ -21,8 +21,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-//client에서 header로 accessToken을 받는다.
-//받은 accesstoken을 체크하여 refreshToken을
 @Data
 @Builder
 @NoArgsConstructor
@@ -34,7 +32,7 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
-    @Column(unique = true)  //token발급 기간이 expired 되었는지 여부
+    @Column(unique = true)
     public String token;
 
     @Column(name = "expired")
