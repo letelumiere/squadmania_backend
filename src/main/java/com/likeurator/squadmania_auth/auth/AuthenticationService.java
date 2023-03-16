@@ -81,17 +81,22 @@ public class AuthenticationService {
     //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
     //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
-    public AuthenticationResponse refresh(RestRequest request, String jwtAccessToken) {
+
+    //re-issue 
+    public AuthenticationResponse reIssuance(RestRequest request, String jwtAccessToken) {
         var user = userRepository.findByEmail(request.getEmail_id())
             .orElseThrow(null);
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getEmail_id());
 
+        var jwtRefreshToken = refreshRepository.findRefreshTokenByUsername(request.getEmail_id())
+            .orElseThrow(null);
+
         String accessToken = jwtAccessToken.substring(7);
-        String refreshToken = "";
-        
-        if(!jwtService.isTokenValid(accessToken, userDetails) && jwtService.isTokenIssuer(accessToken, userDetails)){
+        String refreshToken = jwtRefreshToken.getToken();
+
+        if(!jwtService.isTokenValid(accessToken, userDetails) || jwtService.isTokenIssuer(accessToken, userDetails)){
             var token = tokenRepository.findByToken(accessToken)
-                .orElseThrow(null);
+                    .orElseThrow(null);
             token.setExpired(true);
             token.setRevoked(true);
             tokenRepository.save(token);
@@ -99,8 +104,8 @@ public class AuthenticationService {
             accessToken = jwtService.generateAccessToken(userDetails);            
             saveUserAccessToken(user, accessToken);
         }
-/*
-        if(jwtService.isTokenValid(refreshToken, userDetails) && jwtService.isTokenIssuer(refreshToken, userDetails)){
+
+        if(jwtService.isTokenValid(refreshToken, userDetails) || jwtService.isTokenIssuer(refreshToken, userDetails)){
             var token = refreshRepository.findByToken(refreshToken)
                 .orElseThrow(null);
             token.setExpired(true);
@@ -109,18 +114,14 @@ public class AuthenticationService {
             refreshToken = jwtService.generateRefreshToken(userDetails);
             saveUserRefreshToken(user, refreshToken);
         }
- */
-    
-        return AuthenticationResponse.builder().accessToken(accessToken)
-                //.refreshToken(refreshToken)
-                .build();
+
+        return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
     //토큰 저장 메서드 -> accessToken은 localStorage 혹은 redis 저장될 예정. 지금은 sql로.
     //아마 OAuth2.0 적용하면서 한번 더 갈아야 할지도.
     
     private void saveUserAccessToken(Userinfo user, String jwtToken) {
-        if(!jwtToken.equals("")){
             var accessToken = AccessToken.builder()
                 .userinfo(user)
                 .token(jwtToken)
@@ -130,11 +131,9 @@ public class AuthenticationService {
                 .build();
         
             tokenRepository.save(accessToken);
-        }
     }
 
     private void saveUserRefreshToken(Userinfo user, String jwtToken) {
-        if(!jwtToken.equals("")){
             var refreshToken = RefreshToken.builder()
                 .userinfo(user)
                 .token(jwtToken)
@@ -142,7 +141,6 @@ public class AuthenticationService {
                 .build();
         
             refreshRepository.save(refreshToken);
-        }
     }    
 
     private void revokeAllUserTokens(Userinfo user) {
@@ -153,9 +151,9 @@ public class AuthenticationService {
             validUserTokens.forEach(token -> {
                 token.setExpired(true);
                 token.setRevoked(true);
+
             });
-        
-            tokenRepository.saveAll(validUserTokens);    
+            tokenRepository.saveAll(validUserTokens);            
         }
         
         if(!validRefreshTokens.isEmpty()){
@@ -166,6 +164,4 @@ public class AuthenticationService {
             refreshRepository.saveAll(validRefreshTokens);    
         }
     }
-
-
 }

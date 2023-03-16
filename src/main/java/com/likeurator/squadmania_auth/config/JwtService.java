@@ -18,6 +18,9 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtService {        
+    //해당 비밀 키는 클라이언트에서 생성해야 하는 듯.
+    //혹은 gradle에 jwt.secret:
+    //그리고 securityConfig에 객체 생성 후 @Value("${jwt.secret}")
     private final String SECRET_KEY = "472D4B6150645367566B58703273357638792F423F4528482B4D625165546857";
     private final Long ACCESS_TOKEN_EXPIRATION = 20 * 60 * 24L;
     private final Long REFRESH_TOKEN_EXPIRATION = 300 * 60 * 24L;
@@ -74,8 +77,8 @@ public class JwtService {
     }
     
     private boolean isTokenReIssuer(String token){
-        Long reIssuer = extractExpiration(token).getTime()/10L;
-        return extractIssuedAt(token).after(new Date(System.currentTimeMillis() - reIssuer));
+        Long reIssuer = extractExpiration(token).getTime() - extractExpiration(token).getTime()/10L;
+        return extractIssuedAt(token).after(new Date(reIssuer));
     }
 
     private Date extractExpiration(String token){

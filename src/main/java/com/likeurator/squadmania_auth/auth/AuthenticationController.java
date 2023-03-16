@@ -35,8 +35,8 @@ public class AuthenticationController {
     }
 
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
-    @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponse> refresh(@RequestBody RestRequest request, @RequestHeader("Authorization") String accessToken) {
-        return ResponseEntity.ok(service.refresh(request, accessToken));
+    @PostMapping("/reIssuance")
+    public ResponseEntity<AuthenticationResponse> reIssuance(@RequestBody RestRequest request, @RequestHeader("Authorization") String jwtAccessToken) {
+        return ResponseEntity.ok(service.reIssuance(request, jwtAccessToken));
     }
 }

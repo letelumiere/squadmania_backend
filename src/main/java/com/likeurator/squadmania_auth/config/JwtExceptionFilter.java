@@ -2,7 +2,7 @@ package com.likeurator.squadmania_auth.config;
 
 import java.io.IOException;
 
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.likeurator.squadmania_auth.auth.*;
 
 import org.apache.tomcat.util.json.JSONParser;
@@ -38,11 +38,13 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         try{
             filterChain.doFilter(request, response);
         }catch(IllegalArgumentException e){
-            log.error("400 bad Request!");
+            setErrorResponse(HttpStatus.BAD_REQUEST, response, e);
+
         }catch(ExpiredJwtException e){
-            log.error("401 unathorized Request! Jwt Token Expired!");
+            setErrorResponse(HttpStatus.UNAUTHORIZED, response, e);
+
         }catch(SignatureException e){
-            log.error("402 payment Request!");
+            setErrorResponse(HttpStatus.PAYMENT_REQUIRED, response, e);
         }
     }
 
@@ -52,7 +54,9 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
         JwtException jwtException = new JwtException(e.getMessage(), e);
         
         JSONParser parser = new JSONParser(jwtException.toString());
-            
-        response.getWriter().write(parser.hashCode());
+        ObjectMapper objectMapper = new ObjectMapper();
+        
+        response.getWriter().write(objectMapper.writeValueAsString(e));
+//        log.info("error = ", status.);
     }
 }
