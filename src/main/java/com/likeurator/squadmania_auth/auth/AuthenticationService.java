@@ -81,8 +81,6 @@ public class AuthenticationService {
     //case3 : access token은 유효하지만, refresh token은 만료된 경우 →  access token을 검증하여 refresh token 재발급                    
     //case4 : access token과 refresh token 모두가 유효한 경우 → 정상 처리
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
-
-    //re-issue 
     public AuthenticationResponse reIssuance(RestRequest request, String jwtAccessToken) {
         var user = userRepository.findByEmail(request.getEmail_id())
             .orElseThrow(null);
@@ -93,26 +91,30 @@ public class AuthenticationService {
 
         String accessToken = jwtAccessToken.substring(7);
         String refreshToken = jwtRefreshToken.getToken();
-
-        if(!jwtService.isTokenValid(accessToken, userDetails) || jwtService.isTokenIssuer(accessToken, userDetails)){
-            var token = tokenRepository.findByToken(accessToken)
+        
+        if(!jwtService.isTokenValid(accessToken, userDetails) && !jwtService.isTokenValid(refreshToken, userDetails)){
+            revokeAllUserTokens(user);
+        }else{
+            if(jwtService.isTokenIssuer(accessToken, userDetails)){
+                var token = tokenRepository.findByToken(accessToken)
+                        .orElseThrow(null);
+                token.setExpired(true);
+                token.setRevoked(true);
+                tokenRepository.save(token);
+    
+                accessToken = jwtService.generateAccessToken(userDetails);            
+                saveUserAccessToken(user, accessToken);
+            }
+    
+            if(jwtService.isTokenIssuer(refreshToken, userDetails)){
+                var token = refreshRepository.findByToken(refreshToken)
                     .orElseThrow(null);
-            token.setExpired(true);
-            token.setRevoked(true);
-            tokenRepository.save(token);
-
-            accessToken = jwtService.generateAccessToken(userDetails);            
-            saveUserAccessToken(user, accessToken);
-        }
-
-        if(jwtService.isTokenValid(refreshToken, userDetails) || jwtService.isTokenIssuer(refreshToken, userDetails)){
-            var token = refreshRepository.findByToken(refreshToken)
-                .orElseThrow(null);
-            token.setExpired(true);
-            refreshRepository.save(token);
-
-            refreshToken = jwtService.generateRefreshToken(userDetails);
-            saveUserRefreshToken(user, refreshToken);
+                token.setExpired(true);
+                refreshRepository.save(token);
+    
+                refreshToken = jwtService.generateRefreshToken(userDetails);
+                saveUserRefreshToken(user, refreshToken);
+            }    
         }
 
         return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();

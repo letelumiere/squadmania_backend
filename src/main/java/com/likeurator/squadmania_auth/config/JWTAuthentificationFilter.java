@@ -69,14 +69,8 @@ public class JwtAuthentificationFilter extends OncePerRequestFilter{
         }   
     }
 
-
     private boolean isAuthHeaderValid(String authHeader){
         if(authHeader!=null && authHeader.startsWith("Bearer ")) return true;
-        return false;
-    }
-
-    private boolean isServletPathValid(HttpServletRequest request){
-        if(request.getServletPath().startsWith("/api/v1/auth/authenticate")) return true;
         return false;
     }
 }
