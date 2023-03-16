@@ -35,8 +35,12 @@ public class AuthenticationController {
     }
 
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
+    //jwtExpiration이 됐을 때가 문제 <- client에서 될까?
     @PostMapping("/reIssuance")
     public ResponseEntity<AuthenticationResponse> reIssuance(@RequestBody RestRequest request, @RequestHeader("Authorization") String jwtAccessToken) {
+        //eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraW0yMzQ1QGVtYWlsLmNvbSIsImlhdCI6MTY3ODk1MzA2OCwiZXhwIjoxNjc4OTUzMDk3fQ.pIh3ZbKswpJPaHlZfLgFRQSBAp4HNns0bkGj1_ovzs0
+        System.out.println("token = " + jwtAccessToken);
+
         return ResponseEntity.ok(service.reIssuance(request, jwtAccessToken));
     }
 }
