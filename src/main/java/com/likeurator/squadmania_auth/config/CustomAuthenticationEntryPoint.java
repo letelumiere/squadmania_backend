@@ -15,9 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
-@Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
 	private static final Logger logger = LoggerFactory.getLogger(CustomAuthenticationEntryPoint.class);
 
 	@Override

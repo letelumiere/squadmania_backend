@@ -27,9 +27,6 @@ import net.minidev.json.JSONObject;
 
 
 
-@Component
-@RequiredArgsConstructor
-@Slf4j
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
     @Override

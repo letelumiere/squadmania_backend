@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.Query;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long>{
@@ -13,12 +15,12 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
                 on r.user_id = u.id
             where r.user_id = ? AND (r.expired='false');
     """, nativeQuery = true)
-    List<RefreshToken> findAllValidTokenByUser(Long id);
+    List<RefreshToken> findAllValidTokenByUser(UUID id);
 
     @Query(value = """
         select r.*
             from refresh_token r inner join userinfo u
-                on r.id =  u.id
+                on r.id = u.id
             where u.email_id = ?;
     """, nativeQuery = true)
     Optional<RefreshToken> findByUserEmail(String email);

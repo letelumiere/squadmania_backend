@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfiguration {
     
     private final JwtAuthentificationFilter jwtAuthFilter;
-    private final JwtExceptionFilter  jwtExceptionFilter;
+//    private final JwtExceptionFilter  jwtExceptionFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
 
@@ -34,7 +34,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/register").permitAll()
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/api/v1/user/**").permitAll()
                 .anyRequest().authenticated()
             .and()
                 .sessionManagement()
@@ -42,10 +43,10 @@ public class SecurityConfiguration {
             .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(jwtExceptionFilter, JwtAuthentificationFilter.class)
-                    .exceptionHandling()
-                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-            .and()
+//                .addFilterBefore(jwtExceptionFilter, JwtAuthentificationFilter.class)
+//                    .exceptionHandling()
+//                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+//            .and()
                 .logout()
                     .logoutUrl("/api/v1/auth/logout")
                     .addLogoutHandler(logoutHandler)

@@ -3,6 +3,7 @@ package com.likeurator.squadmania_auth.domain.user;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.RefreshToken;
@@ -10,6 +11,7 @@ import com.likeurator.squadmania_auth.token.RefreshToken;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.GeneratedColumn;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.ListIndexBase;
 import org.hibernate.tuple.GenerationTiming;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,10 +47,10 @@ import lombok.*;
 @Builder
 public class Userinfo implements UserDetails {
 
-    @Id 
-	@Column(name ="id", updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name="uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
     
     @Column(name = "email_id")
     private String emailId;

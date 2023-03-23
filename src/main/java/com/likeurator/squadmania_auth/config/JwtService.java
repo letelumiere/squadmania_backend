@@ -23,8 +23,8 @@ public class JwtService {
     //혹은 gradle에 jwt.secret:
     //그리고 securityConfig에 객체 생성 후 @Value("${jwt.secret}")
     private final String SECRET_KEY = "472D4B6150645367566B58703273357638792F423F4528482B4D625165546857";
-    private final Long ACCESS_TOKEN_EXPIRATION = 20 * 60 * 24L;
-    private final Long REFRESH_TOKEN_EXPIRATION = 300 * 60 * 24L;
+    private final Long ACCESS_TOKEN_EXPIRATION = 2000 * 60 * 24L;
+    private final Long REFRESH_TOKEN_EXPIRATION = 30000 * 60 * 24L;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
