@@ -14,6 +14,7 @@ import org.hibernate.annotations.GeneratedColumn;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.ListIndexBase;
 import org.hibernate.tuple.GenerationTiming;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,8 +26,10 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -98,6 +101,10 @@ public class Userinfo implements UserDetails {
     
     @OneToMany(mappedBy = "userinfo")
     private List<RefreshToken> refreshTokens;
+
+//    @OneToOne
+//    @JoinColumn(name = "id")
+//    private UserinfoDate userinfoDate;
 
 
     @Override

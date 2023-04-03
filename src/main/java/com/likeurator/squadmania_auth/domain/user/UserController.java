@@ -32,46 +32,22 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserController {
     @Autowired private final UserService userService;
-    @Autowired private final AuthenticationService authService;
-
-    @PostMapping("/sign")
-    public ResponseEntity<Userinfo> createUserinfo(@RequestBody Userinfo user){    //1. 아이디 create -회원가입 (parameter : auth_id)
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/user/save").toUriString());
-            return ResponseEntity.created(uri).body(userService.signUpUser(user));    
-    }   
     
-//    @GetMapping("/email/{email}")
-//    public ResponseEntity<Userinfo> getAccountByScreenName(@PathVariable String email){
-//        return ResponseEntity.ok(userService.getUserByEmail(email));
-//    }
-
-
     @GetMapping("/email/{email}")
     public ResponseEntity<Optional<Userinfo>> findUserByEmail(@PathVariable String email){
         return ResponseEntity.ok(userService.findByEmail(email));
     }
-
+    
     @GetMapping("/lists")
     public ResponseEntity<List<Userinfo>> getUserAll(){
         return ResponseEntity.ok(userService.findAllUsers());
     }
 
-
-    @PutMapping("/modify")
-    public ResponseEntity<UserUpdateResponse> findAndUpdateUser(@RequestBody RestRequest request, @RequestParam String password){
-        return ResponseEntity.ok(userService.findAndUpdateUser(request, password));
-    }
-
-    @DeleteMapping("/sign-out")
-    public ResponseEntity<Userinfo> deleteAccount(@RequestBody UserUpdateRequest request){    //추후에 requestBody 넣을 것
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    
-    private void reliveUserinfo(Long id, String email){
+    //차후 수정 예정
+    @PutMapping("/{email_id}")
+    public void updateInfo(@PathVariable(name = "email_id") String email){
         
     }
-
 
 }
 

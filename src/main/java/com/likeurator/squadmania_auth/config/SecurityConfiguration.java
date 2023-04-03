@@ -26,9 +26,10 @@ import lombok.RequiredArgsConstructor;
 public class SecurityConfiguration {
     
     private final JwtAuthentificationFilter jwtAuthFilter;
-//    private final JwtExceptionFilter  jwtExceptionFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
+//    private final JwtExceptionFilter  jwtExceptionFilter;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,10 +44,6 @@ public class SecurityConfiguration {
             .and()
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(jwtExceptionFilter, JwtAuthentificationFilter.class)
-//                    .exceptionHandling()
-//                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-//            .and()
                 .logout()
                     .logoutUrl("/api/v1/auth/logout")
                     .addLogoutHandler(logoutHandler)
@@ -55,3 +52,8 @@ public class SecurityConfiguration {
         return http.build();
     }
 }
+
+//                .addFilterBefore(jwtExceptionFilter, JwtAuthentificationFilter.class)
+//                    .exceptionHandling()
+//                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+//            .and()

@@ -1,6 +1,8 @@
 package com.likeurator.squadmania_auth.auth;
 
 
+import java.sql.Timestamp;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,6 +15,7 @@ import com.likeurator.squadmania_auth.domain.user.Role;
 import com.likeurator.squadmania_auth.domain.user.UserRepository;
 import com.likeurator.squadmania_auth.domain.user.UserService;
 import com.likeurator.squadmania_auth.domain.user.Userinfo;
+import com.likeurator.squadmania_auth.domain.user.UserinfoDate;
 import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.RefreshToken;
 import com.likeurator.squadmania_auth.token.TokenRepository;
@@ -43,7 +46,9 @@ public class AuthenticationService {
             .emailId(request.getEmail_id())
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.USER)
+            .withdraw(false)
             .build();
+
         userRepository.save(user);
         var savedUser = userRepository.save(user);
 
@@ -53,7 +58,10 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);        
         saveUserRefreshToken(savedUser, refreshToken);
 
-        return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build(); 
+        return AuthenticationResponse.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .build(); 
     }
     
     //새로운 accessToken과 refreshToken 생성
@@ -65,6 +73,12 @@ public class AuthenticationService {
 
         var user = userRepository.findByEmail(request.getEmail_id())
             .orElseThrow(null);
+
+        if(user.getWithdraw()) {
+            user.setWithdraw(false); 
+            user.setWithdrawDate(null);
+        }
+        
         revokeAllUserTokens(user);
 
         var accessToken = jwtService.generateAccessToken(user);
@@ -73,7 +87,25 @@ public class AuthenticationService {
         var refreshToken = jwtService.generateRefreshToken(user);
         saveUserRefreshToken(user, refreshToken);
         
-        return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        return AuthenticationResponse.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .build();
+    }
+    
+    //참조
+    //https://webcache.googleusercontent.com/search?q=cache:sNMEucCGzjkJ:https://wonit.tistory.com/130&cd=1&hl=ko&ct=clnk&gl=kr
+    //https://velog.io/@sun1203/Spring-BootPut-Patch
+    public AuthenticationResponse reAuthenticate(String email, AuthenticationRequest request){
+        var user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new NullPointerException("해당 responseBody가 무존재"));
+
+        user.setEmailId(request.getEmail_id());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        
+        userRepository.save(user);
+
+        return authenticate(request);
     }
 
     //case1 : access token과 refresh token 모두가 만료된 경우 → 에러 발생 (재 로그인하여 둘다 새로 발급)
@@ -117,7 +149,10 @@ public class AuthenticationService {
             }    
         }
 
-        return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        return AuthenticationResponse.builder()
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .build();
     }
 
     //토큰 저장 메서드 -> accessToken은 localStorage 혹은 redis 저장될 예정. 지금은 sql로.

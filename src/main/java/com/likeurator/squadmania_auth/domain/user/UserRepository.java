@@ -8,11 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface UserRepository extends JpaRepository<Userinfo, Long>{
 
-    @Query(value = "select * from userinfo where email_id = ?",
+    @Query(value = "select * from userinfo where email_id = ?;",
         nativeQuery = true)
-    public Optional<Userinfo> findByEmail(String emailId);
+    public Optional<Userinfo> findByEmail(String email);
 
-    @Query(value = "select * from userinfo where id =?",
+    @Query(value = "select * from userinfo where id = ?;",
         nativeQuery = true)
     public Optional<Userinfo> getReferenceByUUID(UUID id);
 }
