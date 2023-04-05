@@ -28,7 +28,7 @@ public class AuthorizationService {
     
     //sql에서는 해당 일시가 되어있는 column을 삭제한다. 혹은 uuid와 ROLE만 남기고 나머지 행만 삭제한다. 
     
-
+    
     public void withdraw(String email){
         var user = userRepository.findByEmail("email")
         .orElseThrow(null);
