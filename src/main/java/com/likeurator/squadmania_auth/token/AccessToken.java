@@ -1,7 +1,7 @@
 package com.likeurator.squadmania_auth.token;
 
 
-import com.likeurator.squadmania_auth.domain.user.Userinfo;
+import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

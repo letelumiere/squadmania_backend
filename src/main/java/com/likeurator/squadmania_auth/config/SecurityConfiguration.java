@@ -15,6 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
+import com.likeurator.squadmania_auth.config.filter.JwtAuthentificationFilter;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 

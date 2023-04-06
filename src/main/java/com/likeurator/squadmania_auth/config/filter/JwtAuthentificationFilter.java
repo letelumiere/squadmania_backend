@@ -1,4 +1,4 @@
-package com.likeurator.squadmania_auth.config;
+package com.likeurator.squadmania_auth.config.filter;
 
 import java.io.IOException;
 
@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.likeurator.squadmania_auth.config.JwtService;
 import com.likeurator.squadmania_auth.domain.user.UserRepository;
 import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.TokenRepository;

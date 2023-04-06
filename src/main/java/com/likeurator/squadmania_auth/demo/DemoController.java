@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.likeurator.squadmania_auth.auth.AuthenticationResponse;
-import com.likeurator.squadmania_auth.domain.user.Userinfo;
+import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 
 
 @RestController

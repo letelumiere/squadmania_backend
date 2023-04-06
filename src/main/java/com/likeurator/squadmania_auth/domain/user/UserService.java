@@ -14,6 +14,7 @@ import com.likeurator.squadmania_auth.auth.AuthenticationRequest;
 import com.likeurator.squadmania_auth.auth.AuthenticationResponse;
 import com.likeurator.squadmania_auth.auth.AuthenticationService;
 import com.likeurator.squadmania_auth.auth.RestRequest;
+import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 import com.nimbusds.jose.crypto.PasswordBasedDecrypter;
 import com.nimbusds.oauth2.sdk.Response;
 

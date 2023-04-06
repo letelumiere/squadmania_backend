@@ -1,4 +1,4 @@
-package com.likeurator.squadmania_auth.domain.user;
+package com.likeurator.squadmania_auth.domain.user.model;
 
 import java.util.Collection;
 import java.util.Date;

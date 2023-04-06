@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.likeurator.squadmania_auth.domain.user.UserRepository;
-import com.likeurator.squadmania_auth.domain.user.Userinfo;
+import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
 import com.likeurator.squadmania_auth.token.TokenRepository;
 

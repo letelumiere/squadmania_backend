@@ -1,4 +1,4 @@
-package com.likeurator.squadmania_auth.config;
+package com.likeurator.squadmania_auth.config.filter;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;

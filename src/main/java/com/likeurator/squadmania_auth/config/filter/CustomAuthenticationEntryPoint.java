@@ -1,4 +1,4 @@
-package com.likeurator.squadmania_auth.config;
+package com.likeurator.squadmania_auth.config.filter;
 
 import java.io.IOException;
 

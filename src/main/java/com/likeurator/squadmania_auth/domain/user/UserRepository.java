@@ -8,6 +8,8 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
+
 public interface UserRepository extends JpaRepository<Userinfo, Long>{
 
     @Query(value = "select * from userinfo where email_id = ?;",

@@ -1,10 +1,11 @@
-package com.likeurator.squadmania_auth.domain.user;
+package com.likeurator.squadmania_auth.domain.user.model;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.likeurator.squadmania_auth.domain.user.Role;
 import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.RefreshToken;
 
