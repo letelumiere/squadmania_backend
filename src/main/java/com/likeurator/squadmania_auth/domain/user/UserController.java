@@ -21,7 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.likeurator.squadmania_auth.auth.AuthenticationService;
-import com.likeurator.squadmania_auth.auth.RestRequest;
+import com.likeurator.squadmania_auth.auth.model.RestRequest;
 import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 
 import lombok.RequiredArgsConstructor;

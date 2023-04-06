@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import com.likeurator.squadmania_auth.auth.model.AuthenticationRequest;
+import com.likeurator.squadmania_auth.auth.model.AuthenticationResponse;
+import com.likeurator.squadmania_auth.auth.model.RegisterRequest;
+import com.likeurator.squadmania_auth.auth.model.RestRequest;
 import com.likeurator.squadmania_auth.config.JwtService;
 import com.likeurator.squadmania_auth.domain.user.Role;
 import com.likeurator.squadmania_auth.domain.user.UserRepository;
