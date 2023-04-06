@@ -58,7 +58,7 @@ public class Userinfo implements UserDetails {
     @Column(name = "email_id")
     private String emailId;
 
-    @Column(name = "auth_id")
+    @Column(name = "auth_id")   
     private String authId;
 
     @Column(name = "auth_type")

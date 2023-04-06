@@ -1,8 +1,11 @@
 package com.likeurator.squadmania_auth.auth;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
 
 import com.likeurator.squadmania_auth.domain.user.Userinfo;
 
@@ -26,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService service;
+    private final AuthorizationService authorizationService;
+
     
     @PostMapping("/register")   //말 그대로 회원 가입  
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
@@ -49,13 +55,15 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.reIssuance(request, jwtAccessToken));
     }
 
-    @DeleteMapping("/sign-out")
-    public ResponseEntity<Userinfo> deleteAccount(@PathVariable(name ="email") String email){    //추후에 requestBody 넣을 것
-        return null;//ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    @PutMapping("/withdraw/{email}")
+    public ResponseEntity<?> withdraw(@PathVariable(name = "email") String email){
+        authorizationService.withdraw(email);
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setLocation(URI.create("/api/v1/auth/logout"));
+
+        return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
-        
-    private void withdraws(Long id, String email){
-        
-    }
+
 
 }

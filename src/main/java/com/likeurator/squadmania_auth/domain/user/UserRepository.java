@@ -1,5 +1,7 @@
 package com.likeurator.squadmania_auth.domain.user;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,4 +17,9 @@ public interface UserRepository extends JpaRepository<Userinfo, Long>{
     @Query(value = "select * from userinfo where id = ?;",
         nativeQuery = true)
     public Optional<Userinfo> getReferenceByUUID(UUID id);
+
+    @Query(value = "select * from userinfo where withdraw_date = ?;",
+        nativeQuery = true)
+    public List<Userinfo> isWithdraws(Date date);
+
 }
