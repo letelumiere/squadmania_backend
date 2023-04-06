@@ -2,25 +2,20 @@ package com.likeurator.squadmania_auth.token;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.query.Param;
 
 public interface TokenRepository extends JpaRepository<AccessToken, Long> {
     @Query(value = """
-        select t.*
-            from access_token t inner join userinfo u
-	            on t.id = u.id
-            where u.id = t.user_id AND (t.expired='false' or t.revoked='false')
+        select a.*
+        from access_token a inner join userinfo u
+            on a.user_id = u.id
+        where a.user_id = ? AND (a.expired='false' or a.revoked='false');
     """, nativeQuery = true)                    
-    List<AccessToken> findAllValidTokenByUser(Long id);
+    List<AccessToken> findAllValidTokenByUser(@Param("u.id") UUID id);
     Optional<AccessToken> findByToken(String token);
-
-    @Query(value = """
-        select a.id, a.user_id, a.token as access_token, r.token as refresh_token 
-            from access_token a join refresh_token r 
-            where a.user_id = r.user_id;
-    """, nativeQuery = true)
-    Optional<AccessToken> findRefreshTokenByUser(Long id);
 
 }

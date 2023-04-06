@@ -1,7 +1,7 @@
 package com.likeurator.squadmania_auth.token;
 
 
-import com.likeurator.squadmania_auth.domain.user.Userinfo;
+import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,12 +29,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity(name = "access_token")
 public class AccessToken {
-
+    
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true)  
+    @Column(name = "token", unique = true)  
     private String token;
 
     @Enumerated(EnumType.STRING)

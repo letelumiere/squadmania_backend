@@ -1,4 +1,4 @@
-package com.likeurator.squadmania_auth.auth;
+package com.likeurator.squadmania_auth.auth.model;
 
 import jakarta.persistence.Column;
 import lombok.*;

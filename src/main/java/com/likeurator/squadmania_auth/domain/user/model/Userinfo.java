@@ -1,17 +1,21 @@
-package com.likeurator.squadmania_auth.domain.user;
+package com.likeurator.squadmania_auth.domain.user.model;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
+import com.likeurator.squadmania_auth.domain.user.Role;
 import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.RefreshToken;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.GeneratedColumn;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.ListIndexBase;
 import org.hibernate.tuple.GenerationTiming;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,8 +27,10 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -45,15 +51,15 @@ import lombok.*;
 @Builder
 public class Userinfo implements UserDetails {
 
-    @Id 
-	@Column(name ="id", updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name="uuid2", strategy = "uuid2")
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
     
     @Column(name = "email_id")
     private String emailId;
 
-    @Column(name = "auth_id")
+    @Column(name = "auth_id")   
     private String authId;
 
     @Column(name = "auth_type")
@@ -96,6 +102,10 @@ public class Userinfo implements UserDetails {
     
     @OneToMany(mappedBy = "userinfo")
     private List<RefreshToken> refreshTokens;
+
+//    @OneToOne
+//    @JoinColumn(name = "id")
+//    private UserinfoDate userinfoDate;
 
 
     @Override
