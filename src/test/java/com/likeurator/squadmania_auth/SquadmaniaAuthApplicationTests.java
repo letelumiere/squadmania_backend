@@ -7,14 +7,5 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class SquadmaniaAuthApplicationTests {
 
-	@BeforeAll
-	static void beforeAll(){
-		System.out.println("Hi!!!!!");
-	}
-
-	@Test
-	void test1(){
-		System.out.println("Hi!");
-	}
-
+	
 }
