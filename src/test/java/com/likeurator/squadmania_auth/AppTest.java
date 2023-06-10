@@ -1,6 +1,7 @@
 package com.likeurator.squadmania_auth;
 
 import java.security.Timestamp;
+import java.util.HashMap;
 
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.junit.jupiter.api.Assertions;
@@ -38,48 +39,62 @@ import jakarta.persistence.Embeddable;
 //@AutoConfigureTestDatabase(replace = Replace.AUTO_CONFIGURED.NONE)
 @SpringBootTest
 public class AppTest {
+    static HashMap<String, RegisterRequest> hMap = new HashMap<>();
+    @Autowired UserRepository userRepository;
     @Autowired AuthenticationService authService;
     @Autowired UserService userService;
+    @Autowired JwtService jwtService;
+
+    static void create(){
+        var user01 = RegisterRequest.builder()
+            .email_id("simyoung@gmail.com")
+            .password("1234")
+            .build();
+        hMap.put("user01", user01);
+
+        var user02 = RegisterRequest.builder()
+            .email_id("doctor@gmail.com")
+            .password("1234")
+            .build();
+        hMap.put("user02", user02);
+
+        var user03 = RegisterRequest.builder()
+            .email_id("shanghai@gmail.com")
+            .password("1234")
+            .build();
+        hMap.put("user03", user03);
+    }
 
     @Test
     void registerTest(){
-        var request = RegisterRequest.builder()
-            .email_id("sim@gmail.com")
-            .password("1234")
-            .build();
+        create();
 
-        
-        var response = authService.register(request);
-        var simyoung = userService.findByEmail(request.getEmail_id())
-            .orElseThrow(null);
-        
+        for(String s : hMap.keySet()){
+            var request = hMap.get(s);
+            
+            var token = authService.register(request);
+            var object = userService.findByEmail(request.getEmail_id())
+                .orElseThrow(null);
+
         System.out.println("==================Test Output=================");
-        System.out.println(simyoung.getEmailId()+" "+simyoung.getPassword());
-        System.out.println(simyoung.getAuthId()+" "+simyoung.getAuthType());
-        System.out.println(simyoung.getUsername()+" ");
-        System.out.println(simyoung.getCreatedAt()+" ");
+        System.out.println(object.getEmailId()+" "+object.getPassword());
+        System.out.println(object.getAuthId()+" "+object.getAuthType());
+        System.out.println(object.getUsername()+" "+object.getCreatedAt());
         System.out.println("==================Test Output=================");
-        
-    }  
+        System.out.println(token.getAccessToken());
+        System.out.println(token.getRefreshToken());                
+        System.out.println("==================Test Output=================");
 
-    void loginTest(){
+        }
+    } 
 
-    }
-
-    void logoutTest(){
-
-    }
-
-    void reassuarenceTest(){
-
-    }
-    
-
-    @Test
-    void tokenTest(){
-
-    }
-
+    void tokenTest(){}
+    void tokenExpiredTest(){}
+    void reassuarnceTest(){}
+    void filterTest(){}
+    void loginTest(){}
+    void logoutTest(){}
+    void roleTest(){}
 
 
 }
