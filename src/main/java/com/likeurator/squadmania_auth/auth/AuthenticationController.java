@@ -54,7 +54,7 @@ public class AuthenticationController {
 
     //https://junhyunny.github.io/spring-boot/spring-security/issue-and-reissue-json-web-token/ <- 참조할것
     //jwtExpiration이 됐을 때가 문제 <- client에서 될까?
-    @PostMapping("/reIssuance")
+    @PostMapping("/re-issuance")
     public ResponseEntity<AuthenticationResponse> reIssuance(@RequestBody RestRequest request, @RequestHeader("Authorization") String jwtAccessToken) {
         return ResponseEntity.ok(service.reIssuance(request, jwtAccessToken));
     }
@@ -62,12 +62,10 @@ public class AuthenticationController {
     @PutMapping("/withdraw/{email}")
     public ResponseEntity<?> withdraw(@PathVariable(name = "email") String email){
         authorizationService.withdraw(email);
-        HttpHeaders headers = new HttpHeaders();
 
+        HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/v1/auth/logout"));
 
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
-
-
 }
