@@ -15,11 +15,13 @@ public class SquadmaniaAuthApplication {
 		SpringApplication.run(SquadmaniaAuthApplication.class, args);
 
 	}
-	
+/* 	
 	@Bean
 	CommandLineRunner commandLineRunner(UserService uService, UserRepository uRepository){
 		return args -> {
 
 		};	
 	}
+
+	*/
 }
