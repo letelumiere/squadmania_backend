@@ -2,6 +2,7 @@ package com.likeurator.squadmania_auth;
 
 import java.security.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.junit.jupiter.api.Assertions;
@@ -33,7 +34,11 @@ import com.likeurator.squadmania_auth.domain.user.UserController;
 import com.likeurator.squadmania_auth.domain.user.UserRepository;
 import com.likeurator.squadmania_auth.domain.user.UserService;
 import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
+import com.likeurator.squadmania_auth.token.AccessToken;
+import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
+import com.likeurator.squadmania_auth.token.TokenRepository;
 
+import io.jsonwebtoken.Claims;
 import jakarta.persistence.Embeddable;
 
 //@AutoConfigureTestDatabase(replace = Replace.AUTO_CONFIGURED.NONE)
@@ -41,10 +46,16 @@ import jakarta.persistence.Embeddable;
 public class AppTest {
     static HashMap<String, RegisterRequest> hMap = new HashMap<>();
     @Autowired UserRepository userRepository;
+    @Autowired TokenRepository tokenRepository;
+    @Autowired RefreshTokenRepository refreshTokenRepository;
     @Autowired AuthenticationService authService;
     @Autowired UserService userService;
     @Autowired JwtService jwtService;
 
+
+    //given
+    //when
+    //then
     static void create(){
         var user01 = RegisterRequest.builder()
             .email_id("simyoung@gmail.com")
@@ -65,7 +76,7 @@ public class AppTest {
         hMap.put("user03", user03);
     }
 
-    @Test
+    
     void registerTest(){
         create();
 
@@ -88,13 +99,32 @@ public class AppTest {
         }
     } 
 
-    void tokenTest(){}
-    void tokenExpiredTest(){}
-    void reassuarnceTest(){}
-    void filterTest(){}
-    void loginTest(){}
-    void logoutTest(){}
-    void roleTest(){}
+    @Test
+    void tokenTest(){
+        registerTest();
 
+        var email = hMap.get("user01").getEmail_id();
+        var user01 = userService.findByEmail(email)
+            .orElseThrow(null);
+        var accessToken = tokenRepository.findAllValidTokenByUser(user01.getId());
+        
+        for(var n : accessToken){
+            var date = jwtService.extractAllClaims(n.getToken());
 
+            System.out.println(n.isExpired()+" "+n.isRevoked());
+            System.out.println("expiration =" + date.getExpiration());
+        }   
+    }
+    void reassuarnceTest(){
+        registerTest();
+    }
+    void filterTest(){
+        registerTest();
+    }
+    void loginTest(){
+
+    }
+    void logoutTest(){
+
+    }
 }
