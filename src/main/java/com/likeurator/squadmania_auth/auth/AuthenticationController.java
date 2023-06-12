@@ -37,6 +37,16 @@ public class AuthenticationController {
     private final AuthorizationService authorizationService;
 
     
+    @PostMapping("/login/oauth2/code/kakao")
+    public void oauth2login(){
+        
+    }
+
+    public void oauth2register(){
+
+    }
+
+
     @PostMapping("/register")   //말 그대로 회원 가입  
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(service.register(request));
