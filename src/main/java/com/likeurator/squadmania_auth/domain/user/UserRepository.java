@@ -24,4 +24,8 @@ public interface UserRepository extends JpaRepository<Userinfo, Long>{
         nativeQuery = true)
     public List<Userinfo> isWithdraws(Date date);
 
+    @Query(value = "select * from userinfo where email_id = ? , provider= ?;",
+            nativeQuery = true)
+    public Optional<Userinfo> findByEmailAndProvider(String emailId, String provider);
+
 }
