@@ -103,6 +103,9 @@ public class Userinfo implements UserDetails {
     @OneToMany(mappedBy = "userinfo")
     private List<RefreshToken> refreshTokens;
 
+    @Column(name = "provider", length = 100)
+    private String provider;
+
 //    @OneToOne
 //    @JoinColumn(name = "id")
 //    private UserinfoDate userinfoDate;
