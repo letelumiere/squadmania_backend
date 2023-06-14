@@ -18,7 +18,8 @@ public class OAuth2Controller {
     CustomOAuth2UserService oauth2SUserService;
 
     //http://localhost:8080/api/v1/auth/login/oauth2/code/kakao
-    //https://kapi.kakao.com/v2/user/me	
+    //https://kapi.kakao.com/v2/user/me		
+    //http://localhost:8080/login/oauth2/code/kakao
     @GetMapping("/api/v1/auth/login/oauth2/code/kakao")
     public ResponseEntity<RegisterRequest> kakaoLogin(RegisterRequest request){
         return null;

@@ -9,6 +9,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -58,6 +63,29 @@ public class SecurityConfiguration {
             ;
             
         return http.build();
+    }
+
+    @Bean
+    public ClientRegistrationRepository clientRegistrationRepository(){
+        return new InMemoryClientRegistrationRepository(this.kakaoClientRegistration());
+    }
+
+    private ClientRegistration kakaoClientRegistration(){
+        return ClientRegistration.withRegistrationId("kakao")
+            .clientId("f66ad78db368781970e4086debb56661")
+            .clientSecret("y4Rv3gbKYIJdcyLZbtY6VGVnLdlhnkY7")
+            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
+            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+            .redirectUri("{baseUrl}/api/v1/auth/{action}/oauth2/code/{registrationId}")
+                        //http://localhost:8080/api/v1/auth/login/oauth2/code/kakao
+                        //http://localhost:8080/login/oauth2/code/kakao
+            .scope("account_email")
+            .authorizationUri("https://kauth.kakao.com/oauth/authorize")
+            .tokenUri("https://kauth.kakao.com/oauth/token")
+            .userInfoUri("https://kapi.kakao.com/v2/user/me")
+            .userNameAttributeName("id")
+            .clientName("kakao")
+            .build();
     }
 }
 
