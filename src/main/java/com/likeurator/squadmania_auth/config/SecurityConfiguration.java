@@ -36,7 +36,7 @@ public class SecurityConfiguration {
     private final JwtAuthentificationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
-//    private final JwtExceptionFilter  jwtExceptionFilter;
+    //    private final JwtExceptionFilter  jwtExceptionFilter;
     private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
@@ -59,8 +59,7 @@ public class SecurityConfiguration {
             .and()
                 .oauth2Login()
                 .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-            ;
+                .userService(customOAuth2UserService);
             
         return http.build();
     }
