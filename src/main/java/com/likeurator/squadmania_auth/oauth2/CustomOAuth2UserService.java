@@ -20,11 +20,21 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;    
 
+
+    //코드 보류
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        
+        String registrationId = userRequest.getClientRegistration().getClientId();
+        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+
+        var user = userRepository.findByEmail("").orElse(null);
+        userRepository.save(user);
+
         System.out.println("Oauth2 =" + oAuth2User.getAttributes());
         
+
         return super.loadUser(userRequest);
     }
      

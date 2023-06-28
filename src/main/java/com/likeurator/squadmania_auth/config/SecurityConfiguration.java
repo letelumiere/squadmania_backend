@@ -60,7 +60,7 @@ public class SecurityConfiguration {
                 .oauth2Login()
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
-            
+                
         return http.build();
     }
 
@@ -68,16 +68,14 @@ public class SecurityConfiguration {
     public ClientRegistrationRepository clientRegistrationRepository(){
         return new InMemoryClientRegistrationRepository(this.kakaoClientRegistration());
     }
-
+    
     private ClientRegistration kakaoClientRegistration(){
         return ClientRegistration.withRegistrationId("kakao")
             .clientId("f66ad78db368781970e4086debb56661")
             .clientSecret("y4Rv3gbKYIJdcyLZbtY6VGVnLdlhnkY7")
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-            .redirectUri("{baseUrl}/api/v1/auth/{action}/oauth2/code/{registrationId}")
-                        //http://localhost:8080/api/v1/auth/login/oauth2/code/kakao
-                        //http://localhost:8080/login/oauth2/code/kakao
+            .redirectUri("{baseUrl}/{action}/oauth2/code/{registrationId}")
             .scope("account_email")
             .authorizationUri("https://kauth.kakao.com/oauth/authorize")
             .tokenUri("https://kauth.kakao.com/oauth/token")

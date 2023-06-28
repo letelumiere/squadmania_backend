@@ -20,17 +20,17 @@ public class OAuth2Controller {
     //http://localhost:8080/api/v1/auth/login/oauth2/code/kakao
     //https://kapi.kakao.com/v2/user/me		
     //http://localhost:8080/login/oauth2/code/kakao
-    @GetMapping("/api/v1/auth/login/oauth2/code/kakao")
-    public ResponseEntity<RegisterRequest> kakaoLogin(RegisterRequest request){
-        return null;
-    }
-     @GetMapping("/api/v1/auth/login/oauth2/code/loaduser")
-    public ResponseEntity<OAuth2User> loaduser(RegisterRequest request){
+    //@GetMapping("/oauth2/code/kakao")
+    //public ResponseEntity<RegisterRequest> kakaoLogin(RegisterRequest request){
+    //    return 
+    //}
+    //@GetMapping("/api/v1/auth/login/oauth2/code/loaduser")
+    //public ResponseEntity<OAuth2User> loaduser(RegisterRequest request){
         
 //	private final ClientRegistration clientRegistration;
 //	private final OAuth2AccessToken accessToken;
 //	private final Map<String, Object> additionalParameters;
-        OAuth2UserRequest userRequest = new OAuth2UserRequest(null, null, null);
-        return ResponseEntity.ok(oauth2SUserService.loadUser(userRequest));
-    }
+//        OAuth2UserRequest userRequest = new OAuth2UserRequest(null, null, null);
+//        return ResponseEntity.ok(oauth2SUserService.loadUser(userRequest));
+//    }
 }
