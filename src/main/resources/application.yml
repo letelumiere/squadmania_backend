@@ -31,9 +31,8 @@ spring:
           kakao:
             client-id: f66ad78db368781970e4086debb56661
             client-secret: y4Rv3gbKYIJdcyLZbtY6VGVnLdlhnkY7
-            scope: account_email
-#            redirect-uri: "{baseUrl}/oauth2/authorization/{registrationId}"
-            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
+            scope: account_email, profile_nickname, profile_image
+            redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
             authorization-grant-type: authorization_code
             client-name: kakao
             client-authentication-method: POST

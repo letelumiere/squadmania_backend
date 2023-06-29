@@ -1,4 +1,4 @@
-package com.likeurator.squadmania_auth.oauth2;
+package com.likeurator.squadmania_auth.domain.oauth2;
 
 import java.util.Map;
 

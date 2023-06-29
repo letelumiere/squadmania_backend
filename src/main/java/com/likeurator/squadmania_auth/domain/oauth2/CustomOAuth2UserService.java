@@ -1,4 +1,4 @@
-package com.likeurator.squadmania_auth.oauth2;
+package com.likeurator.squadmania_auth.domain.oauth2;
 
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -28,14 +28,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         
         String registrationId = userRequest.getClientRegistration().getClientId();
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
-
-        var user = userRepository.findByEmail("").orElse(null);
-        userRepository.save(user);
-
+                    
         System.out.println("Oauth2 =" + oAuth2User.getAttributes());
         
 
         return super.loadUser(userRequest);
     }
-     
+
 }

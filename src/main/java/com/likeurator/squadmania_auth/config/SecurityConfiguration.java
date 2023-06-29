@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import com.likeurator.squadmania_auth.config.filter.JwtAuthentificationFilter;
-import com.likeurator.squadmania_auth.oauth2.CustomOAuth2UserService;
+import com.likeurator.squadmania_auth.domain.oauth2.CustomOAuth2UserService;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +58,7 @@ public class SecurityConfiguration {
                     .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
             .and()
                 .oauth2Login()
-                .userInfoEndpoint()
+                .userInfoEndpoint() 
                 .userService(customOAuth2UserService);
                 
         return http.build();
@@ -76,7 +76,7 @@ public class SecurityConfiguration {
             .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
             .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
             .redirectUri("{baseUrl}/{action}/oauth2/code/{registrationId}")
-            .scope("account_email")
+            .scope("account_email", "profile_nickname", "profile_image")
             .authorizationUri("https://kauth.kakao.com/oauth/authorize")
             .tokenUri("https://kauth.kakao.com/oauth/token")
             .userInfoUri("https://kapi.kakao.com/v2/user/me")
