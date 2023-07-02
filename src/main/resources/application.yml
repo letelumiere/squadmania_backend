@@ -29,13 +29,14 @@ spring:
  #           client-secret: # 발급 받은 client-secret #
  #           scope: # 필요한 권한 #
           kakao:
+            client-name: kakao
             client-id: f66ad78db368781970e4086debb56661
             client-secret: y4Rv3gbKYIJdcyLZbtY6VGVnLdlhnkY7
-            scope: account_email, profile_nickname, profile_image
-            redirect-uri: "http://localhost:8080/login/oauth2/code/{registrationId}"
-            authorization-grant-type: authorization_code
-            client-name: kakao
             client-authentication-method: POST
+            redirect-uri: "{baseUrl}/api/v1/oauth2/code/{registrationId}"
+#            redirect-uri: "{baseUrl}/api/v1/oauth2/code/{registrationId}"
+            scope: account_email, profile_nickname, profile_image
+            authorization-grant-type: authorization_code
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
