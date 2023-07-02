@@ -13,7 +13,7 @@ import com.likeurator.squadmania_auth.auth.model.RegisterRequest;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController("/api/v1/")
+@RestController("/api/v1/oauth2")
 @RequiredArgsConstructor
 public class OAuth2Controller {
     CustomOAuth2UserService oauth2SUserService;
@@ -25,6 +25,6 @@ public class OAuth2Controller {
 
     @GetMapping("/success")
     public String success() {
-        return "success"; // 로그인 성공 후 이동할 뷰 이름y
+        return "success"; // 로그인 성공 후 이동할 뷰 이름
     }
 }

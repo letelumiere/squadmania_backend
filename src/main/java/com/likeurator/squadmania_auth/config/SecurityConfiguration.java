@@ -49,26 +49,21 @@ public class SecurityConfiguration {
                 .requestMatchers("/api/v1/user/**").permitAll()
                 .requestMatchers("/api/v1/oauth2/**").permitAll()
                 .anyRequest().authenticated()
-            .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
+                .and()
+                .sessionManagement(management -> management
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .logout()
-                    .logoutUrl("/api/v1/auth/logout")
-                    .addLogoutHandler(logoutHandler)
-                    .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext())
-            .and()
-                .oauth2Login()
-                .loginPage("/api/v1/oauth2/login")
-                .defaultSuccessUrl("/api/v1/oauth2/success")
-            .and()
-            .oauth2Client()
-                .clientRegistrationRepository(clientRegistrationRepository())
-                .authorizedClientRepository(authorizedClientRepository())
-                .authorizationCodeGrant();
-                
+                .logout(logout -> logout
+                        .logoutUrl("/api/v1/auth/logout")
+                        .addLogoutHandler(logoutHandler)
+                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()))
+                .oauth2Login(login -> login
+                        .clientRegistrationRepository(clientRegistrationRepository())
+                        .authorizedClientRepository(authorizedClientRepository())
+                        .userInfoEndpoint()
+                        .userService(customOAuth2UserService));
+                                    
         return http.build();
     }
 
