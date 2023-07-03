@@ -29,7 +29,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
                     
         System.out.println("Oauth2 =" + oAuth2User.getAttributes());
-
+        
 
         return super.loadUser(userRequest);
     }

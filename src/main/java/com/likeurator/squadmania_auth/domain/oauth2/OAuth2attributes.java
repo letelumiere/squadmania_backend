@@ -11,7 +11,9 @@ import com.likeurator.squadmania_auth.domain.user.Role;
 import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 
 import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Builder
 public class OAuth2attributes {
     private Map<String, Object> attributes;
