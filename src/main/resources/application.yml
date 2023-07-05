@@ -24,10 +24,6 @@ spring:
     oauth2:
       client:
         registration:
-#          google:
- #           client-id: # 발급 받은 client-id #
- #           client-secret: # 발급 받은 client-secret #
- #           scope: # 필요한 권한 #
           kakao:
             client-name: kakao
             client-id: f66ad78db368781970e4086debb56661

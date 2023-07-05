@@ -1,4 +1,4 @@
-package com.likeurator.squadmania_auth.domain.oauth2;
+package com.likeurator.squadmania_auth.domain.oauth2.model;
 
 import java.util.Map;
 import lombok.Getter;
