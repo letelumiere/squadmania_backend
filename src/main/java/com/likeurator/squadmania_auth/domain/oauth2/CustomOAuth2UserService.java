@@ -17,6 +17,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import com.likeurator.squadmania_auth.domain.oauth2.model.OAuth2UserInfoResponse;
 import com.likeurator.squadmania_auth.domain.user.UserRepository;
 import com.nimbusds.jose.shaded.gson.Gson;
 
@@ -45,8 +46,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         throw new UnsupportedOperationException("Unimplemented method 'loadUser'");
     }
 
-    public String kakaoCallback(String code) {
+    public OAuth2UserInfoResponse kakaoCallback(String code) throws OAuth2AuthenticationException {
         RestTemplate restTemplate = new RestTemplate();
+        
         HttpHeaders headers = requestHeaders(new HttpHeaders());
         MultiValueMap parameters = requestParameters(code, new LinkedMultiValueMap());
         
@@ -63,10 +65,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
             String accessToken = (String) responseMap.get("access_token");
             log.info("Access Token: {}", accessToken);
-            return accessToken;
+
+            OAuth2UserInfoResponse userInfoResponse = kakaoCall(responseMap);
+
+            return userInfoResponse;
         } else {
             log.error("Error occurred while fetching access token: {}", response.getStatusCode());
-            return "Error";
+            throw new UnsupportedOperationException("Unimplemented method 'loadUser'");
         }
     }
 
@@ -92,4 +97,13 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
         return parameters;
     }
+
+    public OAuth2UserInfoResponse kakaoCall(Map<String, Object> parameters) {
+        return OAuth2UserInfoResponse.builder()
+            .accessToken((String)parameters.get("access_token"))
+            .refreshToken((String)parameters.get("refresh_token"))
+            .idToken((String)parameters.get("id_token"))
+        .build();
+    }
+
 }
