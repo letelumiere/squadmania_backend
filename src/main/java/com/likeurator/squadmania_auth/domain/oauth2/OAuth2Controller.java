@@ -42,11 +42,30 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OAuth2Controller {
 
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
+    
+    @Value("${spring.security.oauth2.client.registration.kakao.client-secret}")
+    private String kakaoClientSecret;
+
     @Autowired
     private CustomOAuth2UserService oAuth2UserService;
-    
+
+    //로직
+    //소셜 로그인 - 회원가입 - 이메일 인증 - 로그인     
+    //1. 카카오에 로그인 -> securitychainfilter로 해결
+        //세션이 구현되어야 함.
+    //2. 카카오에서 authorization code 받아서 회원가입
+    //3. 카카오에 로그인 -> 카카오 아이디로 로그인
+    //간편가입 redirectUrl 등록을 안함 ㅋ 해야 하나?
+        //accessToken이 부여됨.
+    //회원 정보에서 provider를 구분해야 하나?
+
+
+    @ResponseBody
     @GetMapping("/code/kakao")
     public ResponseEntity<String> kakaoCallback(@RequestParam String code) {
         return ResponseEntity.ok(oAuth2UserService.kakaoCallback(code));
+
     }
 }
