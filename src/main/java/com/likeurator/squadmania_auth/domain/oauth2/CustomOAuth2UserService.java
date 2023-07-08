@@ -94,6 +94,8 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         parameters.add("redirect_uri", "http://localhost:8080/api/v1/oauth2/code/kakao");
         parameters.add("code", code);
         parameters.add("code_verifier", codeVerifier);
+//        parameters.add("code_challenge", codeChallenge);
+
 
         return parameters;
     }
