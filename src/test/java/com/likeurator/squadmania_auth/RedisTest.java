@@ -6,7 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.likeurator.squadmania_auth.config.JwtService;
 import com.likeurator.squadmania_auth.token.RedisToken;
-import com.likeurator.squadmania_auth.token.RedisTokenRepository;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +19,12 @@ public class RedisTest {
     //1차 테스트 - redis가 작동하는지 여부만 확인
     @Test
     void test() {
+
+    /*
+        https://developia.tistory.com/36 
+ 
+    */
+
         var token = RedisToken.builder()
             .token("test_token")
             .build();
@@ -34,9 +39,12 @@ public class RedisTest {
         repository.count();
         repository.delete(token);
     }
-}
 
-/*
- https://developia.tistory.com/36 
- 
- */
+    // 해당 redis token 테스트가 비즈니스 로직에 작용하는지 확인
+    // 필요 - 생성된 계정
+    
+    @Test
+    void test2(){
+
+    }
+}
