@@ -1,8 +1,11 @@
-package com.likeurator.squadmania_auth.token;
+package com.likeurator.squadmania_auth;
+
+import java.io.Serializable;
 
 import org.springframework.data.redis.core.RedisHash;
 
 import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
+import com.likeurator.squadmania_auth.token.TokenType;
 
 import io.lettuce.core.dynamic.annotation.Key;
 import jakarta.persistence.Column;
@@ -25,7 +28,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @RedisHash(value = "redis_token", timeToLive = 30)
-public class RedisToken {
+public class RedisToken implements Serializable {
     
     @Id
     @GeneratedValue

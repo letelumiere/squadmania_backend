@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.likeurator.squadmania_auth.config.JwtService;
-import com.likeurator.squadmania_auth.token.RedisToken;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +21,6 @@ public class RedisTest {
 
     /*
         https://developia.tistory.com/36 
- 
     */
 
         var token = RedisToken.builder()
