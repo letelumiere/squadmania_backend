@@ -1,10 +1,10 @@
 package com.likeurator.squadmania_auth.token;
 
+
 import org.springframework.data.redis.core.RedisHash;
 
 import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 
-import io.lettuce.core.dynamic.annotation.Key;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
