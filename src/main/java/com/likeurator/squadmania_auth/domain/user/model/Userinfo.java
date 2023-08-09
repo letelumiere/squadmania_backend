@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.likeurator.squadmania_auth.domain.user.Role;
-import com.likeurator.squadmania_auth.token.AccessToken;
-import com.likeurator.squadmania_auth.token.RefreshToken;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
@@ -22,7 +20,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -89,11 +86,6 @@ public class Userinfo implements UserDetails {
 
     @Column(name = "provider", length = 100)
     private String provider;
-
-//    @OneToOne
-//    @JoinColumn(name = "id")
-//    private UserinfoDate userinfoDate;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

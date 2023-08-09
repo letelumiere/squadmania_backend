@@ -15,7 +15,9 @@ import com.likeurator.squadmania_auth.token.AccessTokenRepository;
 @RestController
 @RequestMapping("/api/v1/demo-controller")
 public class DemoController {
-    
+    @Autowired AccessTokenRepository repository;
+    @Autowired UserRepository userRepository;
+
     @GetMapping
     public ResponseEntity<String> sayHello(){
         return ResponseEntity.ok("hello from secured endpoint");
