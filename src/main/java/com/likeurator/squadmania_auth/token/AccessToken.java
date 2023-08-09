@@ -28,7 +28,7 @@ public class AccessToken implements Serializable {
     @Column(name = "email_id")
     private String emailid;
 
-    @Column(name = "token", unique = true)  
+    @Column(name = "token")  
     private String token;
 
     @Enumerated(EnumType.STRING)

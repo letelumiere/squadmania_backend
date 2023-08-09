@@ -28,7 +28,10 @@ public class RefreshToken {
     @Column(name = "email_id")
     private String emailid;
 
-    @Column(name = "token", unique = true)  
+    @Column(name = "username")
+    private String username;
+
+    @Column(name = "token")  
     private String token;
 
     @Enumerated(EnumType.STRING)

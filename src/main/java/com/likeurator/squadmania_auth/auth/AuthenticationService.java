@@ -171,6 +171,9 @@ public class AuthenticationService {
         var refreshToken = RefreshToken.builder()
             .id(user.getId().toString())
             .token(jwtToken)
+            .tokenType(TokenType.BEARER)
+            .expired(false)
+            .revoked(false)
             .build();
 
         refreshRepository.save(refreshToken);
