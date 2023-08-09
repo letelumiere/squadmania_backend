@@ -1,32 +1,22 @@
 package com.likeurator.squadmania_auth.auth;
 
-import java.security.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.likeurator.squadmania_auth.domain.user.UserRepository;
 import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
-import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
-import com.likeurator.squadmania_auth.token.TokenRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class AuthorizationService {    
     private final UserRepository userRepository;
-    private final TokenRepository tokenRepository;
-    private final RefreshTokenRepository refreshRepository;
-
 
     //1.회원가입이 되어있는지 확인 뒤
         //2.ROLE에 탈퇴예정을 update하고

@@ -1,5 +1,5 @@
 package com.likeurator.squadmania_auth.domain.oauth2;
-
+/*
 import java.util.Base64;
 import java.util.Map;
 
@@ -18,20 +18,16 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import com.likeurator.squadmania_auth.domain.oauth2.model.OAuth2UserInfoResponse;
-import com.likeurator.squadmania_auth.domain.user.UserRepository;
 import com.nimbusds.jose.shaded.gson.Gson;
 
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-@Service
-@Slf4j
-@RequiredArgsConstructor
-public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-    private final UserRepository userRepository;
-    private final HttpSession httpSession;
-
+ */
+//@Service
+//@Slf4j
+//@RequiredArgsConstructor
+public interface CustomOAuth2UserService /*implements OAuth2UserService<OAuth2UserRequest, OAuth2User>*/ {
+/* 
     @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
     private String kakaoClientId;
     
@@ -105,5 +101,5 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
             .idToken((String)parameters.get("id_token"))
         .build();
     }
-
+    */
 }

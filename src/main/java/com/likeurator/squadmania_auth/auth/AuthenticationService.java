@@ -1,8 +1,6 @@
 package com.likeurator.squadmania_auth.auth;
 
 
-import java.sql.Timestamp;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,9 +15,7 @@ import com.likeurator.squadmania_auth.auth.model.RestRequest;
 import com.likeurator.squadmania_auth.config.JwtService;
 import com.likeurator.squadmania_auth.domain.user.Role;
 import com.likeurator.squadmania_auth.domain.user.UserRepository;
-import com.likeurator.squadmania_auth.domain.user.UserService;
 import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
-import com.likeurator.squadmania_auth.domain.user.model.UserinfoDate;
 import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.RefreshToken;
 import com.likeurator.squadmania_auth.token.TokenRepository;
@@ -28,11 +24,9 @@ import com.likeurator.squadmania_auth.token.TokenType;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final TokenRepository tokenRepository;

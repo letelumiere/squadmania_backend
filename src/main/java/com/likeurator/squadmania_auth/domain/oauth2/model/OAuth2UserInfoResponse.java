@@ -1,6 +1,5 @@
 package com.likeurator.squadmania_auth.domain.oauth2.model;
 
-import org.springframework.util.LinkedMultiValueMap;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,5 @@
 package com.likeurator.squadmania_auth.domain.oauth2;
-
+/*
 import java.util.Base64;
 import java.util.Map;
 
@@ -32,16 +32,17 @@ import com.nimbusds.jose.shaded.gson.Gson;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+ */
+//@RestController
+//@RequestMapping("api/v1/oauth2")
+public interface OAuth2Controller {
+    //@Autowired
+    //private CustomOAuth2UserService oAuth2UserService;
 
-@RestController
-@RequestMapping("api/v1/oauth2")
-@Slf4j
-public class OAuth2Controller {
-    @Autowired
-    private CustomOAuth2UserService oAuth2UserService;
-
+    /*
     @GetMapping("/code/kakao")
     public ResponseEntity<OAuth2UserInfoResponse> kakaoCallback(@RequestParam String code) {
         return ResponseEntity.ok(oAuth2UserService.kakaoCallback(code));
     }
+     */
 }
