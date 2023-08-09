@@ -15,9 +15,5 @@ public class AuthorizationController {
     private final AuthorizationService authorizationService;
 
 
-    @PutMapping("/withdraw/{email}")
-    public void withdraw(@PathVariable(name = "email") String email){
-        authorizationService.withdraw(email);
-    }
 
 }

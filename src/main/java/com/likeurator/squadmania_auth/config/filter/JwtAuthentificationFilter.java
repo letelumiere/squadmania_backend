@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.likeurator.squadmania_auth.config.JwtService;
-import com.likeurator.squadmania_auth.token.TokenRepository;
+import com.likeurator.squadmania_auth.token.AccessTokenRepository;
 
 
 @Component
@@ -26,7 +26,7 @@ import com.likeurator.squadmania_auth.token.TokenRepository;
 public class JwtAuthentificationFilter extends OncePerRequestFilter{
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
-    private final TokenRepository tokenRepository;
+    private final AccessTokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)

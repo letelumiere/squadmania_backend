@@ -56,4 +56,10 @@ public class AuthenticationController {
 
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
+
+    @PutMapping("/withdraws/{email}")
+    public void withdraws(@PathVariable(name = "email") String email){
+        authorizationService.withdraw(email);
+    }
+
 }
