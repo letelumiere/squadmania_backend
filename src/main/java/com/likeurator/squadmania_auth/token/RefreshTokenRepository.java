@@ -3,7 +3,6 @@ package com.likeurator.squadmania_auth.token;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
 

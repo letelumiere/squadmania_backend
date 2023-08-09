@@ -29,9 +29,6 @@ public class LogoutService implements LogoutHandler {
             .orElse(null);
 
         if(storedToken != null){
-            storedToken.setExpired(true);
-            storedToken.setRevoked(true);
-            
             accessTokenRepository.delete(storedToken);
 
             var refreshToken = refreshTokenRepository.findByUserEmail(
@@ -39,7 +36,7 @@ public class LogoutService implements LogoutHandler {
                 )
                 .orElse(null);
 
-            if(refreshToken != null){
+            if(refreshToken != null) {
                 refreshTokenRepository.delete(refreshToken);
             }
 

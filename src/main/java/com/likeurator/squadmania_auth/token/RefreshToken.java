@@ -1,12 +1,13 @@
 package com.likeurator.squadmania_auth.token;
 
 
-import java.util.UUID;
 
 import org.springframework.data.redis.core.RedisHash;
 
 
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,13 +19,21 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash(value = "refresh_token", timeToLive = 60)
+@RedisHash(value = "refresh_token")
 public class RefreshToken {
-
+    
     @Id
-    private String id;
-    private String username;
+    private String id;   
+    
+    @Column(name = "email_id")
+    private String emailid;
 
-    @Column(unique = true)
-    public String token;
+    @Column(name = "token", unique = true)  
+    private String token;
+
+    @Enumerated(EnumType.STRING)
+    private TokenType tokenType = TokenType.BEARER;
+    
+    private boolean revoked;
+    private boolean expired;
 }

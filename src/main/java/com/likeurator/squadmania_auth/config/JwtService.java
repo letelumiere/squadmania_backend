@@ -64,12 +64,12 @@ public class JwtService {
 
     public boolean isTokenValid(String token, UserDetails userDetails){
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && (!isTokenExpired(token) || token==null);  
+        return (username.equals(userDetails.getUsername())) && (!isTokenExpired(token) && token!=null);  
     }
 
     public boolean isTokenIssuer(String token, UserDetails userDetails){
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && (!isTokenReIssuer(token) || token==null);  
+        return (username.equals(userDetails.getUsername())) && (!isTokenReIssuer(token) && token!=null);  
     }
 
     private boolean isTokenExpired(String token) {
