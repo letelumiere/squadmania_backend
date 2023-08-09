@@ -24,10 +24,8 @@ import com.likeurator.squadmania_auth.token.TokenType;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class AuthenticationService {
     private final UserRepository userRepository;
