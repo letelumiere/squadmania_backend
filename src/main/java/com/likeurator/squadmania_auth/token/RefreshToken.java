@@ -1,7 +1,6 @@
 package com.likeurator.squadmania_auth.token;
 
 
-import java.io.Serializable;
 import java.util.UUID;
 
 import org.springframework.data.redis.core.RedisHash;
@@ -20,10 +19,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @RedisHash(value = "refresh_token", timeToLive = 60)
-public class RefreshToken implements Serializable {
+public class RefreshToken {
 
     @Id
-    private UUID id;
+    private String id;
     private String username;
 
     @Column(unique = true)

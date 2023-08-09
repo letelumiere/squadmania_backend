@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 public class AccessToken implements Serializable {
     
     @Id
-    private UUID id;   
+    private String id;   
     
     @Column(name = "email_id")
     private String emailid;

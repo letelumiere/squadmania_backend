@@ -152,7 +152,7 @@ public class AuthenticationService {
 
     private void saveUserAccessToken(Userinfo user, String jwtToken) {
         var accessToken = AccessToken.builder()
-            .id(user.getId())
+            .id(user.getId().toString())
             .token(jwtToken)
             .tokenType(TokenType.BEARER)
             .expired(false)
@@ -164,16 +164,17 @@ public class AuthenticationService {
 
     private void saveUserRefreshToken(Userinfo user, String jwtToken) {
         var refreshToken = RefreshToken.builder()
-            .id(user.getId())
+            .id(user.getId().toString())
             .token(jwtToken)
             .build();
 
         refreshRepository.save(refreshToken);
     }    
 
+    // https://velog.io/@backtony/Redis-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9E%85%EC%B6%9C%EB%A0%A5-%EB%B0%8F-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0-%EC%8B%A4%EC%8A%B5%ED%95%98%EA%B8%B0
     private void revokeAllUserTokens(Userinfo user) {
-        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
-        var validRefreshTokens = refreshRepository.findAllValidTokenByUser(user.getId());
+        var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId().toString());
+        var validRefreshTokens = refreshRepository.findAllValidTokenByUser(user.getId().toString());
 
         if(!validUserTokens.isEmpty()){
             validUserTokens.forEach(token -> {
