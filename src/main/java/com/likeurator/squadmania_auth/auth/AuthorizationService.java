@@ -24,19 +24,13 @@ public class AuthorizationService {
             //user.setWithdrawDate(); 현재시간+30일 뒤. 년월일만 체크
     
     //sql에서는 해당 일시가 되어있는 column을 삭제한다. 혹은 uuid와 ROLE만 남기고 나머지 행만 삭제한다. 
-    
-    
-    public void withdraw(String email){
-        
+    public void withdraw(String email){        
         var user = userRepository.findByEmail(email)
-        .orElseThrow(null);
-    
-        user.setWithdraw(true);
-        user.setWithdrawDate(new Date(System.currentTimeMillis() + 100 * 60 * 24L));   //임시 시간
-        
-        userRepository.save(user);
+            .orElseThrow(null);
 
-        
+        user.setWithdraw(true);
+        user.setWithdrawDate(new Date(System.currentTimeMillis() + 100 * 60 * 24L));   //임시 시간   
+        userRepository.save(user);
     }
 
     @Scheduled(fixedRate = 24 * 60 * 60 * 10)   //시간 예약 수정 필요
@@ -49,7 +43,5 @@ public class AuthorizationService {
             userRepository.delete(user);
         }
     } 
-
 }
 
-//LocalDateTime time = LocalDateTime.now().plusDays(30);

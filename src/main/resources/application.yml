@@ -5,6 +5,9 @@ server:
       enabled: true
       force: true
 spring:
+  output:
+    ansi:
+      enabled: always
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/squadmania?serverTimezone=UTC&characterEncoding=UTF-8
@@ -16,7 +19,7 @@ spring:
     generate-ddl: false
     open-in-view: true
     hibernate:
-      ddl-auto: drop
+      ddl-auto: create-drop
       naming:
         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

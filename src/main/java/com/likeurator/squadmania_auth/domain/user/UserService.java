@@ -30,8 +30,4 @@ public class UserService {
         return userRepository.getReferenceByUUID(id);
     }
 
-    public void userUpdate(){
-
-
-    }
 }

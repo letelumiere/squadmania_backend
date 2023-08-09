@@ -87,12 +87,6 @@ public class Userinfo implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "userinfo")
-    private List<AccessToken> accessTokens;
-    
-    @OneToMany(mappedBy = "userinfo")
-    private List<RefreshToken> refreshTokens;
-
     @Column(name = "provider", length = 100)
     private String provider;
 

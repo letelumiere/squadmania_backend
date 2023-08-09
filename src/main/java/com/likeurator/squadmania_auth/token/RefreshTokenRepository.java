@@ -7,8 +7,9 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long>{
+public interface RefreshTokenRepository extends CrudRepository<RefreshToken, UUID>{
     @Query(value = """
         select r.*
             from refresh_token r inner join userinfo u

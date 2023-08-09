@@ -9,13 +9,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.stereotype.Service;
 
+import com.likeurator.squadmania_auth.token.AccessTokenRepository;
 import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
-import com.likeurator.squadmania_auth.token.TokenRepository;
 
 @Service
 @RequiredArgsConstructor
 public class LogoutService implements LogoutHandler {
-    private final TokenRepository tokenRepository;
+    private final AccessTokenRepository accessTokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
@@ -25,22 +25,22 @@ public class LogoutService implements LogoutHandler {
         if (authHeader == null ||!authHeader.startsWith("Bearer ")) return;
         
         jwt = authHeader.substring(7);
-        var storedToken = tokenRepository.findByToken(jwt)
+        var storedToken = accessTokenRepository.findByToken(jwt)
             .orElse(null);
 
         if(storedToken != null){
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
-            tokenRepository.save(storedToken);
+            
+            accessTokenRepository.delete(storedToken);
 
             var refreshToken = refreshTokenRepository.findByUserEmail(
-                        storedToken.getUserinfo().getUsername()
+                    storedToken.getEmailid()
                 )
                 .orElse(null);
 
             if(refreshToken != null){
-                refreshToken.setExpired(true);
-                refreshTokenRepository.save(refreshToken);
+                refreshTokenRepository.delete(refreshToken);
             }
 
             SecurityContextHolder.clearContext();
