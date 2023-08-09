@@ -11,15 +11,11 @@ import com.likeurator.squadmania_auth.token.RefreshToken;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
-import org.hibernate.annotations.GeneratedColumn;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.ListIndexBase;
 import org.hibernate.tuple.GenerationTiming;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Indexed;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,14 +23,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
 import lombok.*;
 

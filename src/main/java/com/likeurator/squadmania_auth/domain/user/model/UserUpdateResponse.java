@@ -1,15 +1,11 @@
 package com.likeurator.squadmania_auth.domain.user.model;
 
-import java.util.List;
 
-import com.likeurator.squadmania_auth.token.AccessToken;
-import com.likeurator.squadmania_auth.token.RefreshToken;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data

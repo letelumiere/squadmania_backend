@@ -1,15 +1,10 @@
 package com.likeurator.squadmania_auth.demo;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.likeurator.squadmania_auth.auth.model.AuthenticationResponse;
-import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 
 
 @RestController

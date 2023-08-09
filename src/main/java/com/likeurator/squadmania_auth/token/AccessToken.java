@@ -11,7 +11,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,6 +38,7 @@ public class AccessToken {
 
     @Enumerated(EnumType.STRING)
     private TokenType tokenType = TokenType.BEARER;
+    
     private boolean revoked;
     private boolean expired;
 

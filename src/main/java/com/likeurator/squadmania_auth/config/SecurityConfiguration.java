@@ -9,13 +9,6 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.HttpSessionOAuth2AuthorizedClientRepository;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -23,9 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 import com.likeurator.squadmania_auth.config.filter.JwtAuthentificationFilter;
-import com.likeurator.squadmania_auth.domain.oauth2.CustomOAuth2UserService;
+//import com.likeurator.squadmania_auth.domain.oauth2.CustomOAuth2UserService;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 
 @Configuration(proxyBeanMethods = false) 
@@ -38,12 +30,11 @@ public class SecurityConfiguration {
     private final JwtAuthentificationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
     private final LogoutHandler logoutHandler;
-    //    private final JwtExceptionFilter  jwtExceptionFilter;
-    private final CustomOAuth2UserService customOAuth2UserService;
+    //private final CustomOAuth2UserService customOAuth2UserService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.csrf(csrf -> csrf.disable());
         http.authorizeHttpRequests()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/user/**").permitAll()
@@ -57,16 +48,17 @@ public class SecurityConfiguration {
                 .logout(logout -> logout
                         .logoutUrl("/api/v1/auth/logout")
                         .addLogoutHandler(logoutHandler)
-                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()))
+                        .logoutSuccessHandler((request, response, authentication) -> SecurityContextHolder.clearContext()));
+            /*
                 .oauth2Login(login -> login
                         .clientRegistrationRepository(clientRegistrationRepository())
                         .authorizedClientRepository(authorizedClientRepository())
                         .userInfoEndpoint()
                         .userService(customOAuth2UserService));
-                                    
+             */                        
         return http.build();
     }
-
+/*
     @Bean
     public ClientRegistrationRepository clientRegistrationRepository(){
         return new InMemoryClientRegistrationRepository(this.kakaoClientRegistration());
@@ -91,10 +83,12 @@ public class SecurityConfiguration {
             .userNameAttributeName("id")
             .clientName("kakao")
             .build();
+            //.addFilterBefore(jwtExceptionFilter, JwtAuthentificationFilter.class)
+            //.exceptionHandling()
+            //.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+            //.and()
+
     }
+*/
 }
 
-//                .addFilterBefore(jwtExceptionFilter, JwtAuthentificationFilter.class)
-//                    .exceptionHandling()
-//                    .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-//            .and()

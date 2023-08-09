@@ -1,6 +1,5 @@
 package com.likeurator.squadmania_auth.auth.model;
 
-import java.util.Date;
 
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;

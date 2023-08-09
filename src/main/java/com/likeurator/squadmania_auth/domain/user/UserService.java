@@ -2,29 +2,15 @@ package com.likeurator.squadmania_auth.domain.user;
 
 import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.likeurator.squadmania_auth.auth.AuthenticationService;
-import com.likeurator.squadmania_auth.auth.model.AuthenticationRequest;
-import com.likeurator.squadmania_auth.auth.model.AuthenticationResponse;
-import com.likeurator.squadmania_auth.auth.model.RestRequest;
 import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
-import com.nimbusds.jose.crypto.PasswordBasedDecrypter;
-import com.nimbusds.oauth2.sdk.Response;
 
-import lombok.extern.slf4j.Slf4j;
 import lombok.*;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Slf4j
 public class UserService {
     private final UserRepository userRepository;
 

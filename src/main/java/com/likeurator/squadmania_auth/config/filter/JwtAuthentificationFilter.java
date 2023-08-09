@@ -7,7 +7,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,24 +18,15 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.likeurator.squadmania_auth.config.JwtService;
-import com.likeurator.squadmania_auth.domain.user.UserRepository;
-import com.likeurator.squadmania_auth.token.AccessToken;
 import com.likeurator.squadmania_auth.token.TokenRepository;
-import com.likeurator.squadmania_auth.token.TokenType;
-
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.security.SignatureException;
 
 
 @Component
 @RequiredArgsConstructor
-@Slf4j
 public class JwtAuthentificationFilter extends OncePerRequestFilter{
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final TokenRepository tokenRepository;
-    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)

@@ -3,7 +3,6 @@ package com.likeurator.squadmania_auth.config;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +14,6 @@ import com.likeurator.squadmania_auth.token.TokenRepository;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class LogoutService implements LogoutHandler {
     private final TokenRepository tokenRepository;
     private final RefreshTokenRepository refreshTokenRepository;
