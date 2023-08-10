@@ -115,15 +115,24 @@ public class AuthenticationService {
     public AuthenticationResponse reIssuance(RestRequest request, String jwtAccessToken) {
         var user = userRepository.findByEmail(request.getEmail_id())
             .orElseThrow(null);
+        // 해당 로직까지는 받아지는 것 같으나, 여기에서 진전이 없음
+
+        System.out.println(user.getEmailId());
 
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getEmail_id());
 
         var jwtRefreshToken = refreshRepository.findRefreshTokenByUsername(request.getEmail_id())
             .orElseThrow(null);
 
+
+            
         String accessToken = jwtAccessToken.substring(7);
         String refreshToken = jwtRefreshToken.getToken();
         
+        // 토큰 삭제 후 재발급 로직에서 뭔가 꼬인 것으로 보임
+        // sql에 저장되는 token과 redis에 저장되는 token의 과정 알고리즘이 차이가 있음
+        // access, refresh token의 재발급 조건에서 꼬인듯?  
+        // 
         if(!jwtService.isTokenValid(accessToken, userDetails) && !jwtService.isTokenValid(refreshToken, userDetails)){
             revokeAllUserTokens(user);
         }else{
@@ -148,6 +157,8 @@ public class AuthenticationService {
                 saveUserRefreshToken(user, refreshToken);
             }    
         }
+
+        System.out.println("hhhhhhhhhhhhhhhhaㅏㅏㅏㅏㅏㅏㅏㅏㅏ");
 
         return AuthenticationResponse.builder()
             .accessToken(accessToken)
@@ -211,7 +222,7 @@ public class AuthenticationService {
         Date date = new Date(System.currentTimeMillis());
         List<Userinfo> memberList = userRepository.isWithdraws(date);
 
-        for(var user : memberList){
+        for(Userinfo user : memberList){
             userRepository.delete(user);
         }
     } 
