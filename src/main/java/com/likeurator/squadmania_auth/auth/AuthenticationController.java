@@ -25,8 +25,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService service;
-    private final AuthorizationService authorizationService;
-
     
     @PostMapping("/register")   //말 그대로 회원 가입  
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
@@ -42,6 +40,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> reAuthenticate(@PathVariable(name = "email") String email, @RequestBody AuthenticationRequest request){
         return ResponseEntity.ok(service.reAuthenticate(email, request));
     }
+
     @PostMapping("/re-issuance")
     public ResponseEntity<AuthenticationResponse> reIssuance(@RequestBody RestRequest request, @RequestHeader("Authorization") String jwtAccessToken) {
         return ResponseEntity.ok(service.reIssuance(request, jwtAccessToken));
@@ -49,17 +48,16 @@ public class AuthenticationController {
 
     @PutMapping("/withdraw/{email}")
     public ResponseEntity<?> withdraw(@PathVariable(name = "email") String email){
-        authorizationService.withdraw(email);
+        service.withdraw(email);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(URI.create("/api/v1/auth/logout"));
-
         return new ResponseEntity<>(headers, HttpStatus.MOVED_PERMANENTLY);
     }
 
     @PutMapping("/withdraws/{email}")
     public void withdraws(@PathVariable(name = "email") String email){
-        authorizationService.withdraw(email);
+        service.withdraw(email);
     }
 
 }

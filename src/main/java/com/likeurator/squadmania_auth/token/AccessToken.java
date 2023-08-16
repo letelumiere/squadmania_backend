@@ -2,7 +2,6 @@ package com.likeurator.squadmania_auth.token;
 
 
 import java.io.Serializable;
-import java.util.UUID;
 
 import org.springframework.data.redis.core.RedisHash;
 
@@ -24,12 +23,12 @@ import lombok.NoArgsConstructor;
 public class AccessToken implements Serializable {
     
     @Id
-    private UUID id;   
+    private String id;   
     
     @Column(name = "email_id")
     private String emailid;
 
-    @Column(name = "token", unique = true)  
+    @Column(name = "token")  
     private String token;
 
     @Enumerated(EnumType.STRING)
