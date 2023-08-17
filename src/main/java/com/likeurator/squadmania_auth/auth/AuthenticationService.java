@@ -27,8 +27,7 @@ import com.likeurator.squadmania_auth.token.RefreshTokenRepository;
 import com.likeurator.squadmania_auth.token.TokenType;
 
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.var;
+import lombok.*;
 
 @Service
 @RequiredArgsConstructor
