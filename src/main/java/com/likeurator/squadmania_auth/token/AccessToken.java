@@ -32,7 +32,7 @@ public class AccessToken implements Serializable {
     private String token;
 
     @Enumerated(EnumType.STRING)
-    private TokenType tokenType = TokenType.BEARER;
+    private TokenType tokenType;
     
     private boolean revoked;
     private boolean expired;
