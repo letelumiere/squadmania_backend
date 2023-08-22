@@ -77,6 +77,7 @@ jobs:
         username: ubuntu
         key: ${{ secrets.KEY }}
         script: |
+          sudo usermod -a -G docker $USER
           sudo docker rm -f $(docker ps -qa)
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx
