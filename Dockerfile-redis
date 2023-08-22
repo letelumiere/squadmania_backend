@@ -1,0 +1,2 @@
+FROM redis
+COPY ./redis/conf.d/nginx.conf /etc/redis/conf.d

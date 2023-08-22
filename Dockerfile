@@ -1,4 +1,4 @@
 FROM openjdk:17
-RUN ./gradlew clean build
-COPY build/libs/*.jar squadmania.jar
-ENTRYPOINT [ "java", "-jar", "squadmania.jar" ]
+ARG JAR_FILE = build/libs/*.jar
+COPY ${JAR_FILE} squadmania.jar
+ENTRYPOINT [ "java", "-jar", "/squadmania.jar" ]
