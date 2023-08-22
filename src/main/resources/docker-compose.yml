@@ -18,7 +18,7 @@ services:
 
   redis:
     container_name: redis
-    image: letelumiere/squadmania-auth-redis
+    image: letelumiere/squadmania-auth-redis:v1
     ports:
       - 6379
     depends_on:
@@ -26,7 +26,7 @@ services:
 
   mysql:
     container_name: mysql
-    image: letelumiere/squadmania-auth-mysql
+    image: letelumiere/squadmania-auth-mysql:v1
     ports:
       - 3306:3306
     environment:
