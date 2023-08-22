@@ -54,10 +54,14 @@ jobs:
         echo "${{ secrets.OAUTH2 }}" >> ./application-oauth2.yml
       shell: bash
 
+    ## gradle chmod
+    - name: Run chmod to make gradlew executable
+      run: chmod +x ./gradlew
+
     ## gradle build
     - name: Build with Gradle
-      run: chmod +x ~/gradlew bootJar
-
+      run: ./gradlew bootJar
+      
     ## 웹 이미지 빌드 및 도커허브에 push
     - name: web docker build and push
       run: |
