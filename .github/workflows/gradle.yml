@@ -73,7 +73,6 @@ jobs:
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
       with:
-        compose-file: "docker-compose.yml"
         host: ${{ secrets.HOST }}
         username: ubuntu
         key: ${{ secrets.KEY }}
