@@ -83,5 +83,11 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
-          docker-compose -f docker-compose.yml up -d
-          docker image prune -f
+##          docker-compose -f docker-compose.yml up -d
+##          docker image prune -f
+    ## docker compose action
+    - name: Docker Compose Action
+      uses: isbang/compose-action@v1.5.1
+      with:
+        compose-file: ./docker-compose.yml
+        up-flags: docker-compose up -d && docker image prune -f
