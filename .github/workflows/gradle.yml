@@ -83,5 +83,5 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
-          sudo docker-compose.yml up -d
+          sudo docker-compose up -d
           docker image prune -f
