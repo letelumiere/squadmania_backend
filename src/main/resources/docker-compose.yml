@@ -28,6 +28,12 @@ services:
     container_name: mysql
     image: letelumiere/squadmania-auth-mysql:v1
     ports:
-      - 3306:3306
+      - "3306:3306"
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
     environment:
-      MYSQL_ROOT_PASSWORD : admin
+      HOST : database-1.cel9rnw4ro7a.ap-northeast-2.rds.amazonaws.com
+      MYSQL_HOST : ${secret.HOST}
+      MYSQL_USER : ${secret.DOCKER_USERNAME}
+      MYSQL_ROOT_PASSWORD : ${secret.DOCKER_PASSWORD}
