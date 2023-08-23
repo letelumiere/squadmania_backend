@@ -31,11 +31,11 @@ services:
     volumes: 
       - ./data/mysql/:/var/lib/mysql
     environment:
-      MYSQL_HOST : database-1.cel9rnw4ro7a.ap-northeast-2.rds.amazonaws.com
-      MYSQL_USER : letelumiere
-      MYSQL_ROOT_PASSWORD : 6Yt7!12at#
-      MYSQL_DATABASE : squadmania
-    ports:
+      MYSQL_HOST : 
+      MYSQL_USER : 
+      MYSQL_ROOT_PASSWORD : 
+      MYSQL_DATABASE : 
+      ports:
       - 3306:3306
     depends_on:
       - web
