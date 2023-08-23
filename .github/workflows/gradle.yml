@@ -82,7 +82,7 @@ jobs:
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web:latest
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
           sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
+          sudo docker pull mysql:latest
 
           docker-compose up -d
           docker image prune -f
