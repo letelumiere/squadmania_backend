@@ -64,32 +64,18 @@ jobs:
         docker build -t ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth .
         docker push ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth
         
-  cd-pipeline:
-    name: continuos deploy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: copy file via ssh password
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ubuntu
-          key: ${{ secrets.KEY }}
-          port: 22
-          source: "docker-compose.yaml"
-          target: "/home/ubuntu/"
     ## docker compose up
-      - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.HOST }}
-          username: ubuntu
-          key: ${{ secrets.KEY }}
-          script: |
-            sudo docker rm -f $(docker ps -qa)
-            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
-            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx
-            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis
-            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql
-            docker-compose up -d
-            docker image prune -f
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ubuntu
+        key: ${{ secrets.KEY }}
+        script: |
+          sudo docker rm -f $(docker ps -qa)
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql
+          docker-compose up -d
+          docker image prune -f
