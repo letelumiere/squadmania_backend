@@ -28,7 +28,7 @@ services:
     container_name: mysql
     image: letelumiere/squadmania-auth-mysql:v1
     ports:
-      - "3306:3306"
+      - 3306:3306
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
