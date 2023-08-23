@@ -4,7 +4,6 @@
 # documentation.
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
-
 name: Java CI with Gradle
 
 on:
@@ -54,35 +53,43 @@ jobs:
         echo "${{ secrets.OAUTH2 }}" >> ./application-oauth2.yml
       shell: bash
 
-    ## gradle chmod
-    - name: Run chmod to make gradlew executable
-      run: chmod +x ./gradlew
-
     ## gradle build
     - name: Build with Gradle
       run: ./gradlew bootJar
-      
+
     ## 웹 이미지 빌드 및 도커허브에 push
     - name: web docker build and push
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker build -t ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web .
-        docker push ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
-
+        docker build -t ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth .
+        docker push ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth
+        
+  cd-pipeline:
+    name: continuos deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          port: 22
+          source: "docker-compose.yaml"
+          target: "/home/ubuntu/"
     ## docker compose up
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ubuntu
-        key: ${{ secrets.KEY }}
-        compose-file: ./docker-compose.yml
-        script: |
-          sudo usermod -a -G docker $USER
-          sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web:latest
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
-          docker-compose -f docker-compose.yml up -d
-          docker image prune -f
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ubuntu
+          key: ${{ secrets.KEY }}
+          script: |
+            sudo docker rm -f $(docker ps -qa)
+            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
+            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx
+            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis
+            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql
+            docker-compose up -d
+            docker image prune -f
