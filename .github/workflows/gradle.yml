@@ -65,8 +65,8 @@ jobs:
     - name: web docker build and push
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-        docker build -t ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth .
-        docker push ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth
+        docker build -t ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web .
+        docker push ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
         
     ## docker compose up
     - name: executing remote ssh commands using password
@@ -77,9 +77,9 @@ jobs:
         key: ${{ secrets.KEY }}
         script: |
           sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web:latest
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
           docker-compose up -d
           docker image prune -f
