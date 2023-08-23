@@ -79,10 +79,10 @@ jobs:
         script: |
           sudo usermod -a -G docker $USER
           sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web:latest
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
+          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
 
           docker-compose up -d
           docker image prune -f
