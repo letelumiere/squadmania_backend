@@ -26,10 +26,10 @@ services:
 
   mysql:
     container_name: mysql
-    image: mysql:8.0.23
+    image: mysql
     restart: always
     volumes: # -v 옵션과 동일
-      - ./mysqldata:/var/lib/mysql
+      - ./data/mysql/:/var/lib/mysql
     environment:
       HOST : database-1.cel9rnw4ro7a.ap-northeast-2.rds.amazonaws.com
       MYSQL_HOST : ${secret.HOST}
