@@ -80,14 +80,7 @@ jobs:
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker build -t ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web .
         docker push ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
-    - name: deploy
-      run: |
-        echo "$KEY" >> $HOME/key-pair.pem
-        chmod 400 $HOME/key-pair.pem
-        sudo scp -r -i $KEY ./docker-compose.yml ubuntu@ec2-15-164-129-132.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/dockerfiles        
-      env:
-        KEY: ${{secrets.KEY}}
-
+        
   ## docker compose up
   docker-compose-up:
     runs-on : ubuntu-latest
