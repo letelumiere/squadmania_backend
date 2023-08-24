@@ -79,13 +79,12 @@ jobs:
             host: ${{ secrets.HOST }}
             username: ubuntu
             key: ${{ secrets.KEY }}
-            source : "docker-compose.yml"
-            target : "/home/dockerfiles"
             script: |
               sudo docker rm -f $(docker ps -qa)
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web:latest
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
+              scp ./docker-compose.yml /home/ubuntu/dockerfiles ubuntu@ec2-15-164-129-132.ap-northeast-2.compute.amazonaws.com
               docker-compose up -d
               docker image prune -f
