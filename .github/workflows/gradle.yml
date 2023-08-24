@@ -69,17 +69,23 @@ jobs:
         docker push ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
         
     ## docker compose up
-    - name: executing remote ssh commands using password
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ubuntu
-        key: ${{ secrets.KEY }}
-        script: |
-          sudo docker rm -f $(docker ps -qa)
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web:latest
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
-          sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
-          docker-compose up -d
-          docker image prune -f
+  deploy:
+    needs: build
+    runs-on : ubuntu-latest
+    steps:
+        - name: executing remote ssh commands using password
+          uses: appleboy/ssh-action@master
+          with:
+            host: ${{ secrets.HOST }}
+            username: ubuntu
+            key: ${{ secrets.KEY }}
+            source : "docker-compose.yml"
+            target : "/home/dockerfiles"
+            script: |
+              sudo docker rm -f $(docker ps -qa)
+              sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web:latest
+              sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
+              sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
+              sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
+              docker-compose up -d
+              docker image prune -f
