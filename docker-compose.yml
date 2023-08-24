@@ -36,6 +36,6 @@ services:
       MYSQL_ROOT_PASSWORD : 
       MYSQL_DATABASE : 
       ports:
-      - 3306:3306
+      - "3306:3306"
     depends_on:
       - web
