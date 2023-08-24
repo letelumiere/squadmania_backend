@@ -74,8 +74,8 @@ jobs:
       - name : deploy action
         uses: marcodallasanta/ssh-scp-deploy@v1.2.0
         with:
-          local: './docker-compose.yml'                                                  # Local file path - REQUIRED false - DEFAULT ./
-          remote: '~/home/ubuntu/dockerfiles'                                                 # Remote file path - REQUIRED false - DEFAULT ~/
+          local: ./docker-compose.yml                                                  # Local file path - REQUIRED false - DEFAULT ./
+          remote: ~/home/ubuntu/dockerfiles                                                 # Remote file path - REQUIRED false - DEFAULT ~/
           host: ${{secrets.HOST}}                                      # Remote server address - REQUIRED true
           ##port: ${{secrets.PORT}}                                      # Remote server port - REQUIRED false - DEFAULT 22
           user: ${{secrets.AWS_USER}}                                      # Remote server user - REQUIRED true
