@@ -68,23 +68,12 @@ jobs:
         docker build -t ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web .
         docker push ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
 
-
-  EC2-Deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - id: deploy
-        uses: bitovi/github-actions-deploy-docker-to-ec2@v0.5.0
-        with:
-          aws_access_key_id: AKIASMSOPS2P6ASG2VE4	
-          aws_secret_access_key: IHDER65JKOFK4LU2E6REDZXYNHJQYDN4이
-          aws_default_region: ap-northeast-2
-          
+                     
   ## docker compose up
   docker-compose-up:
-    needs: EC2-Deploy
     runs-on : ubuntu-latest
     steps:
-        - uses: actions/checkout@master
+        - uses: actions/checkout@master        
         - name: executing remote ssh commands using password
           uses: appleboy/ssh-action@master
           with:
@@ -96,10 +85,10 @@ jobs:
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web:latest
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
-              sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1
+              sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1                          
+              sudo scp -i ./docker-compose.yml ubuntu@ec2-15-164-129-132.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/dockerfiles
+              cd /home/ubuntu/dockerfiles
               docker-compose up -d
               docker image prune -f
 
-##              sudo scp ./docker-compose.yml ubuntu@ec2-15-164-129-132.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/dockerfiles
-##              cd /home/ubuntu/dockerfiles
            
