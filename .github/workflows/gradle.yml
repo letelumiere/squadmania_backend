@@ -88,7 +88,7 @@ jobs:
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-nginx:latest
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-redis:v1
               sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-mysql:v1                          
-              echo "sudo scp -f ${KEY} -i ./docker-compose.yml ubuntu@ec2-15-164-129-132.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/dockerfiles"
+              echo "sudo scp -f $KEY -i ./docker-compose.yml ubuntu@ec2-15-164-129-132.ap-northeast-2.compute.amazonaws.com:/home/ubuntu/dockerfiles"
               cd /home/ubuntu/dockerfiles
               docker-compose up -d
               docker image prune -f
