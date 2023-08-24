@@ -75,8 +75,8 @@ jobs:
       - id: deploy
         uses: bitovi/github-actions-deploy-docker-to-ec2@v0.5.0
         with:
-          aws_access_key_id: key-03e2c1e8c339b5408
-          aws_secret_access_key: ${{ secrets.KEY }}
+          aws_access_key_id: AKIASMSOPS2P6ASG2VE4	
+          aws_secret_access_key: IHDER65JKOFK4LU2E6REDZXYNHJQYDN4이
           aws_default_region: ap-northeast-2
           
   ## docker compose up
