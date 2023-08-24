@@ -68,23 +68,20 @@ jobs:
         docker build -t ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web .
         docker push ${{ secrets.DOCKER_REPOSITORY }}/squadmania-auth-web
 
-  deploy-scp-action:
-    runs-on : ubuntu-latest
+
+  scp-action:
+    name: scp action
+    runs-on: ubuntu-latest
     steps:
-      - name : deploy action
-        uses: marcodallasanta/ssh-scp-deploy@v1.2.0
-        with:
-          local: "./docker-compose.yml"                                                  # Local file path - REQUIRED false - DEFAULT ./
-          remote: "/home/ubuntu/dockerfiles"                                                  # Remote file path - REQUIRED false - DEFAULT ~/
-          host: ${{secrets.HOST}}                                      # Remote server address - REQUIRED true
-          ##port: ${{secrets.PORT}}                                      # Remote server port - REQUIRED false - DEFAULT 22
-          user: ${{secrets.AWS_USER}}                                      # Remote server user - REQUIRED true
-          ##password: ${{secrets.PASSWORD}}                              # User password - REQUIRED at least one of "password" or "key" 
-          key: ${{secrets.KEY}}                                        # Remote server private key - REQUIRED at least one of "password" or "key" 
-          ##pre_upload: echo "This will be executed before the upload!"  # Command to run via ssh before scp upload - REQUIRED false
-          ##post_upload: echo "This will be executed after the upload!"  # Command to run via ssh after scp upload - REQUIRED false
-          ##ssh_options: -o StrictHostKeyChecking=no                     # A set of ssh_option separated by -o - REQUIRED false - DEFAULT -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
-          ##scp_options: -v                                              # Flags to use during scp - REQUIRED false - DEFAULT ''
+    - uses: actions/checkout@v3
+    - name: copy file via ssh password
+      uses: appleboy/scp-action@v0.1.4
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.AWS_USER }}
+        key : ${{ screets.KEY }}
+        source: "./docker-compose.yml"
+        target: /home/ubuntu/dockerfiles
           
   ## docker compose up
   docker-compose-up:
