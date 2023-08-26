@@ -1,4 +1,4 @@
-version: '2.20.3'
+version: '3'
 services:
   web:
     container_name: web
@@ -31,10 +31,10 @@ services:
     volumes: 
       - ./data/mysql/:/var/lib/mysql
     environment:
-      MYSQL_HOST : 
-      MYSQL_USER : 
-      MYSQL_ROOT_PASSWORD : 
-      MYSQL_DATABASE : 
+      MYSQL_ROOT_HOST : '%' 
+      MYSQL_USER : ${{ secrets.AWS_USER }}
+      MYSQL_ROOT_PASSWORD : ${{ MYSQL_ROOT_PASSWORD }} 
+      MYSQL_DATABASE : 'squadmania'
       ports: "3306:3306"
     depends_on:
       - web

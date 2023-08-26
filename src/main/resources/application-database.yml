@@ -1,0 +1,20 @@
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://database-1.cel9rnw4ro7a.ap-northeast-2.rds.amazonaws.com/squadmania?serverTimezone=UTC&characterEncoding=UTF-8
+        username: ${{ secrets.AWS_USER }}
+        password: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        show-sql: true
+        generate-ddl: true
+        open-in-view: true
+        hibernate:
+            ddl-auto: create
+            naming:
+                implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    data:
+        redis:
+            host: localhost
+            port: 6379
