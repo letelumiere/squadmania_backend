@@ -83,6 +83,7 @@ jobs:
 
 
   scp-action:
+    needs: build
     name: scp action
     runs-on: ubuntu-latest
     steps:
