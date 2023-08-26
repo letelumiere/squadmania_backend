@@ -94,7 +94,7 @@ jobs:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.AWS_USER }}
         key : ${{ secrets.KEY }}
-        source: "./docker-compose.yml"
+        source: "docker-compose.yml"
         target: /home/ubuntu/dockerfiles
           
   ## docker compose up
