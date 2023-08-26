@@ -38,3 +38,4 @@ out/
 src/main/resources/application-database.yml
 src/main/resources/application-oauth2.yml
 docker-compose.yml
+src/main/resources/application-database.yml
