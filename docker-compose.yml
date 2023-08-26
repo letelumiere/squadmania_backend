@@ -33,7 +33,7 @@ services:
     environment:
       MYSQL_ROOT_HOST : '%' 
       MYSQL_USER : ${{ secrets.AWS_USER }}
-      MYSQL_ROOT_PASSWORD : ${{ MYSQL_ROOT_PASSWORD }} 
+      MYSQL_ROOT_PASSWORD : ${{ secrets.MYSQL_ROOT_PASSWORD }} 
       MYSQL_DATABASE : 'squadmania'
       ports: "3306:3306"
     depends_on:
