@@ -53,19 +53,6 @@ jobs:
         echo "${{ secrets.OAUTH2 }}" >> ./application-oauth2.yml
       shell: bash
 
-    - name: make docker-compose.yml
-      run: |
-        ## create docker-compose.yml
-        cd ..
-
-        # docker-compose.yml 파일 생성
-        touch ./docker-compose.yml
-
-        # GitHub-Actions 에서 설정한 값을 docker-compose.yml 파일에 쓰기
-        echo "${{ secrets.DOCKER_COMPOSE }}" >> ./docker-compose.yml
-      shell: bash
-
-
     ## gradle chmod
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
