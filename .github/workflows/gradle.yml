@@ -58,7 +58,7 @@ jobs:
         echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" >> .env
       env:
         MYSQL_USER: ${{ secrets.AWS_USER }}
-        MYSQL_ROOT_PASSWORD: $${{ MYSQL_ROOT_PASSWORD }}
+        MYSQL_ROOT_PASSWORD: $${{ secrets.MYSQL_ROOT_PASSWORD }}
         
     ## gradle chmod
     - name: Run chmod to make gradlew executable
