@@ -52,6 +52,7 @@ jobs:
         # GitHub-Actions 에서 설정한 값을 application-oauth2.yml 파일에 쓰기
         echo "${{ secrets.OAUTH2 }}" >> ./application-oauth2.yml
       shell: bash
+      
     - name: modifty .env for docker-compose
       run: |
         echo "MYSQL_USER=$MYSQL_USER" >> .env
@@ -59,7 +60,8 @@ jobs:
       env:
         MYSQL_USER: ${{ secrets.AWS_USER }}
         MYSQL_ROOT_PASSWORD: $${{ secrets.MYSQL_ROOT_PASSWORD }}
-        
+      shell: bash
+      
     ## gradle chmod
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
