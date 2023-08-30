@@ -60,10 +60,10 @@ jobs:
     - name: MySQL
       uses: mirromutth/mysql-action@v1.1
       with:
-        mysql-user: ${{ env.AWS_USER }}
+        mysql user: ${{ env.AWS_USER }}
         mysql-password: ${{ env.MYSQL_ROOT_PASSWORD }}
-        mysql-database: ${{ env.MYSQL_DATABASE }}
-        mysql-version: "latest"
+        mysql database: ${{ env.MYSQL_DATABASE }}
+        mysql version: "latest"
       
     - name: Modify docker compose
       run: |
