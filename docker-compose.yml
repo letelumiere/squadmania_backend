@@ -1,3 +1,4 @@
+version: '3'
 services:
   web:
     container_name: web
@@ -23,7 +24,8 @@ services:
     depends_on:
       - web
 
-  db:
+  mysql:
+    container_name: mysql
     image: letelumiere/squadmania-auth-mysql:v1
     environment:
       MYSQL_ROOT_HOST: '%'
@@ -35,4 +37,4 @@ services:
       MYSQL_PORT: ${MYSQL_PORT}
     command: --port=${MYSQL_PORT}
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init:/docker-entrypoint-initdb.d  # Changed volume path
