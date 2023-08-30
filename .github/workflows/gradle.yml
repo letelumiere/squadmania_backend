@@ -52,15 +52,28 @@ jobs:
         # GitHub-Actions 에서 설정한 값을 application-oauth2.yml 파일에 쓰기
         echo "${{ secrets.OAUTH2 }}" >> ./application-oauth2.yml
       shell: bash
-      
-    - name: modifty .env for docker-compose
-      run: |
-        echo "MYSQL_USER=$MYSQL_USER" >> .env
-        echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" >> .env
-      env:
-        MYSQL_USER: ${{ secrets.AWS_USER }}
-        MYSQL_ROOT_PASSWORD: $${{ secrets.MYSQL_ROOT_PASSWORD }}
-      shell: bash
+
+    - name: mysql
+      uses: mirromutth/mysql-action@v1.1
+      with:
+        host port: 3306 # Optional, default value is 3306. The port of host
+        container port: 3306 # Optional, default value is 3306. The port of container
+        character set server: 'utf8' # Optional, default value is 'utf8mb4'. The '--character-set-server' option for mysqld
+        collation server: 'utf8_general_ci' # Optional, default value is 'utf8mb4_general_ci'. The '--collation-server' option for mysqld
+        mysql version: '8.0' # Optional, default value is "latest". The version of the MySQL
+        mysql database: 'database-1' # Optional, default value is "test". The specified database which will be create
+        mysql root password: ${{ secrets.MYSQL_ROOT_PASSWORD }} # Required if "mysql user" is empty, default is empty. The root superuser password
+        mysql user: ${{ secrets.AWS_USER }} # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
+        mysql password: ${{ secrets.MYSQL_ROOT_PASSWORD }} # Required if "mysql user" exists. The password for the "mysql user"      
+
+##    - name: modifty .env for docker-compose
+##      run: |
+##        echo "MYSQL_USER=$MYSQL_USER" >> .env
+##        echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" >> .env
+##      env:
+##        MYSQL_USER: ${{ secrets.AWS_USER }}
+##        MYSQL_ROOT_PASSWORD: $${{ secrets.MYSQL_ROOT_PASSWORD }}
+##      shell: bash
       
     ## gradle chmod
     - name: Run chmod to make gradlew executable
