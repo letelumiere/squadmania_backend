@@ -63,7 +63,7 @@ jobs:
         mysql version: "latest" # Optional, default value is "latest". The version of the MySQL
         mysql database: "squadmania" # Optional, default value is "test". The specified database which will be create
         mysql root password: ${{ secrets.MYSQL_ROOT_PASSWORD }} # Required if "mysql user" is empty, default is empty. The root superuser password
-##        mysql user: ${{ secrets.AWS_USER }} # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
+        mysql user: ${{ secrets.AWS_USER }} # Required if "mysql root password" is empty, default is empty. The superuser for the specified database. Can use secrets, too
         ##mysql password: ${{ secrets.MYSQL_ROOT_PASSWORD }} # Required if "mysql user" exists. The password for the "mysql user"      
 
 ##    - name: modifty .env for docker-compose
