@@ -1,4 +1,3 @@
-version: '3'
 services:
   web:
     container_name: web
@@ -24,17 +23,16 @@ services:
     depends_on:
       - web
 
-  mysql:
-    container_name: mysql
+  db:
     image: letelumiere/squadmania-auth-mysql:v1
-    restart: always
-    volumes: 
-      - ./data/mysql/:/var/lib/mysql
     environment:
-      - mysql root host='%' 
-      - mysql user=${MYSQL_USER}
-      - mysql root password=${MYSQL_ROOT_PASSWORD} 
-      - mysql database=${MYSQL_DATABASE}
-      - ports="3306:3306"
-    depends_on:
-      - web
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+    command: --port=${MYSQL_PORT}
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
