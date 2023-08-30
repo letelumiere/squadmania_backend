@@ -11,7 +11,7 @@ services:
     container_name: nginx
     image: letelumiere/squadmania-auth-nginx
     ports:
-      - 80:80
+      - 7000:80
     depends_on:
       - web
 
