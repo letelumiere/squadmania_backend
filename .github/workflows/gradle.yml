@@ -110,8 +110,8 @@ jobs:
         username: ${{ secrets.AWS_USER }}
         key : ${{ secrets.KEY }}
         source: | 
-          docker-compose.yml
-          .env
+          "docker-compose.yml"
+          ".env"
         target: /home/ubuntu/dockerfiles
           
   ## docker compose up
