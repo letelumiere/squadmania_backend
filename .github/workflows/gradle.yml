@@ -69,15 +69,11 @@ jobs:
         MYSQL_USER: ${{secrets.AWS_USER}}
         MYSQL_ROOT_PASSWORD: ${{secrets.MYSQL_ROOT_PASSWORD}}
         MYSQL_DATABASE: "squadmania"
-      
-      
-    - name: modifty docker compose
+        
+    - name: Modify docker compose
       run: |
-        echo "MYSQL_USER=$MYSQL_USER" >> docker-compose.yml
-        echo "MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD" >> docker-comnpose.yml
-      env:
-        MYSQL_USER: ${{ secrets.AWS_USER }}
-        MYSQL_ROOT_PASSWORD: $${{ secrets.MYSQL_ROOT_PASSWORD }}
+        sed -i "s/MYSQL_USER=.*/MYSQL_USER=${{ secrets.AWS_USER }}/" docker-compose.yml
+        sed -i "s/MYSQL_ROOT_PASSWORD=.*/MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}/" docker-compose.yml
       shell: bash
       
     ## gradle chmod
