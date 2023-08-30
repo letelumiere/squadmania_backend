@@ -32,9 +32,9 @@ services:
       - ./data/mysql/:/var/lib/mysql
     environment:
       - MYSQL_ROOT_HOST='%' 
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} 
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - PORTS="3306:3306"
+      - mysql user=${MYSQL_USER}
+      - mysql root password=${MYSQL_ROOT_PASSWORD} 
+      - mysql database=${MYSQL_DATABASE}
+      - ports="3306:3306"
     depends_on:
       - web
