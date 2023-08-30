@@ -72,10 +72,9 @@ jobs:
        
     - name: Modify docker compose
       run: |
-        sed -i "s/MYSQL_USER=.*/MYSQL_USER=${{ secrets.AWS_USER }}/" docker-compose.yml
-        sed -i "s/MYSQL_ROOT_PASSWORD=.*/MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}/" docker-compose.yml
-      shell: bash
-      
+        sed -i "s/mysql_user=.*/mysql_user=${{ secrets.AWS_USER }}/" docker-compose.yml
+        sed -i "s/mysql_root_password=.*/mysql_root_password=${{ secrets.MYSQL_ROOT_PASSWORD }}/" docker-compose.yml
+      shell: bash      
     ## gradle chmod
     - name: Run chmod to make gradlew executable
       run: chmod +x ./gradlew
