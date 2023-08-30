@@ -101,19 +101,17 @@ jobs:
     needs: build
     name: scp action
     runs-on: ubuntu-latest
-    steps:
+    steps:  
     - uses: actions/checkout@v3
-    - name: copy file via ssh password
+    - name: copy files via ssh password
       uses: appleboy/scp-action@v0.1.4
       with:
         host: ${{ secrets.HOST }}
         username: ${{ secrets.AWS_USER }}
-        key : ${{ secrets.KEY }}
-        source: | 
-          "docker-compose.yml"
-          ".env"
-        target: /home/ubuntu/dockerfiles
-          
+        key: ${{ secrets.KEY }}
+        source: "docker-compose.yml .env"
+        target: /home/ubuntu/dockerfiles          
+  
   ## docker compose up
   docker-compose-up:
     needs : scp-action
