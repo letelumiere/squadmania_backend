@@ -206,17 +206,12 @@
 ### 개발 기록
 - <a href="https://velog.io/@letelumiere/squadmania-dev-1" target="_blank"> 프로젝트의 간략한 소개</a>
 - <a href="https://velog.io/@letelumiere/squadmania-dev-2" target="_blank"> Spring Security의 Congifuration과 authentificationFilter 구축</a>
-- <a href="https://velog.io/@letelumiere/squadmania-dev-3" target="_blank">authntificiaionConfiguration 설정</a>
-- <a href="https://velog.io/@letelumiere/squadmania-dev-4" target="_blank">
-JPA with Hibernates를 통한 데이터 영속성 부여 과정</a>
-- <a href="https://velog.io/@letelumiere/squadmania-dev-5" target="_blank">
-회원 가입, 탈퇴 및 정보 수정 기능 구현</a>
-- <a href="https://velog.io/@letelumiere/squadmania-dev-6" target="_blank">
-로그인, 로그아웃, Json Web Token 발급 및 유효기간 기능 구현</a>
-- <a href="https://velog.io/@letelumiere/squadmania-dev-7" target="_blank">
-카카오 서비스를 통한 OAuth2.0 인증 도입 과정</a>
-- <a href="https://velog.io/@letelumiere/squadmania-dev-8" target="_blank">
-Json Web Token의 유효성 체크를 위한 Redis 도입 과정</a>
+- <a href="https://velog.io/@letelumiere/squadmania-dev-3" target="_blank"> authntificiaionConfiguration 설정</a>
+- <a href="https://velog.io/@letelumiere/squadmania-dev-4" target="_blank"> JPA with Hibernates를 통한 데이터 영속성 부여 과정</a>
+- <a href="https://velog.io/@letelumiere/squadmania-dev-5" target="_blank"> 회원 가입, 탈퇴 및 정보 수정 기능 구현</a>
+- <a href="https://velog.io/@letelumiere/squadmania-dev-6" target="_blank"> 로그인, 로그아웃, Json Web Token 발급 및 유효기간 기능 구현</a>
+- <a href="https://velog.io/@letelumiere/squadmania-dev-7" target="_blank"> 카카오 서비스를 통한 OAuth2.0 인증 도입 과정</a>
+- <a href="https://velog.io/@letelumiere/squadmania-dev-8" target="_blank"> Json Web Token의 유효성 체크를 위한 Redis 도입 과정</a>
 ---
 
 ### 후기
