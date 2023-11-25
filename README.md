@@ -15,40 +15,40 @@
 ---
 
 ### 들어가기에 앞서
-  해당 리포지토리는 iOS 앱 서비스 <a href="http://squadmania.github.io">스쿼드매니아</a>의 백엔드 프로젝트의 소스 코드를 다루고 있습니다.
+해당 리포지토리는 iOS 앱 서비스 <a href="http://squadmania.github.io">스쿼드매니아</a>의 백엔드 프로젝트를 다루고 있습니다.
 
 ### 프로젝트 소개
-  스쿼드매니아는 넥슨 모바일에서 퍼블리싱한 게임 <피파 온라인4>의 전적 검색 서비스로서, 지난 2021년에 애플스토어에 출시 된 이래 안정적인 운영을 이어나가고 있는 게임 데이터 서비스 입니다. 사용자 경험과 접근성 면에서 무난한 평가를 받고 있지만, 서비스 내외적으로 여러 애로사항이 가 있었습니다. 개인적으로 신입 백엔드 개발자를 준비하는 입장에서 전체적으로 접하고 숙달해야 할 기술들이 사용되는 프로젝트 였기에 참여하게 되었습니다.
+스쿼드매니아는 넥슨 모바일에서 퍼블리싱한 게임 "피파 온라인4"의 전적 검색 서비스로, 2021년에 애플스토어에 출시된 이후 안정적인 운영을 지속하고 있는 게임 데이터 서비스입니다. 사용자 경험과 접근성 측면에서 양호한 평가를 받았지만, 서비스 내부와 외부에서 여러 가지 개선이 필요한 부분이 있었습니다. 백엔드 개발자의 커리어를 준비하는 입장에서 기술 습득과 경험 쌓기에 적합한 프로젝트라 판단하여 참여하게 되었습니다.
 
 ### 프로젝트의 기획
 
 ### 개발 목표
-  - 현재 서비스 환경에서는 외부 API과의 요청 응답과 DB 처리 과정 등의 모든 기능들이 iOS에 설치된 어플 내부에서 동작함. 이로인해 서비스가 유지될수록 어플의 용량이 증가하며, 사용자의 모바일 환경에서 메모리 부담이 커질 수 밖에 없었습니다.
-  - 한편 서비스의 모든 기능이 Swift와 node.js의 기반 하에 개발 되었는데, 이 때문에 android, HTML5과 같은 타 플랫폼 사용자들을 확보하는데 제약을 겪었으며, 추후 서비스 확대 과정에서 광범위한 어려움을 겪게 될 것이 분명했습니다.
-  - 해당 프로젝트는 위의 애로사항들을 해결하기 위한 웹 서버 어플리케이션의 개발 프로젝트로서, 기존의 모바일 앱 환경에서 사용되는 기능들을 웹 서버에서 지원하는 한편, 기존의 서비스에서 기술적으로 미약한 점을 보완하는데 주안점을 두고 진행하는 것으로 방향성을 삼았습니다. 
+ - 현재 서비스 환경에서는 외부 API와의 요청 응답, DB 처리 등의 모든 기능이 iOS 어플리케이션 내에서 동작합니다. 이로 인해 서비스가 확장될수록 어플리케이션의 용량이 증가하고, 사용자의 모바일 환경에서 메모리 부담이 커질 수밖에 없었습니다.
+ - 또한, 서비스의 모든 기능이 Swift와 node.js를 기반으로 개발되어 있어, Android, HTML5 등 다른 플랫폼의 사용자를 확보하는 데 제약이 있었고, 향후 서비스 확장 시 다양한 어려움을 겪을 것으로 예상되었습니다.
+ - 해당 프로젝트는 위의 문제점을 해결하기 위한 웹 서버 어플리케이션의 개발 프로젝트로, 기존의 모바일 앱 환경에서 사용되는 기능들을 웹 서버에서 지원하면서, 기존 서비스에서 기술적으로 부족한 점을 보완하는 데 중점을 두고 진행되었습니다.
 
 ### 개발 환경
 
 #### 1. Language
-  - Java SE-17
+  - Java17
 
 #### 2. Framework/Library
-  - Springboot 3.0.2
+  - Springboot gradle 3.0.2
   - SpringSecurity
-  - SpringOAuth2.0
-  - SpringJPA with Hibernates
-  
+  - Spring OAuth2.0
+
 #### 3. BuildTool
-  - Gradle7.6
+  - Gradle 7.6
 
 #### 4. Database
   - MySQL CommunityEdition 8.0.19.
-  - RedisInsight-v2 2.30.0
-
+  - Redis 7.0.12
+  - 
 #### 5. CI/CD
   - Amazon EC2 Instance
   - Amazon RDS
   - Docker version 24.0.5, build ced0996
+  - Docker-compose 3
   - github-actions
   - nginx
 
@@ -56,7 +56,7 @@
 
 ### 프로젝트 패키지의 구조
 <details>
-  <summary>해당 웹 어플리케이션의 패키지 트리는 다음과 같습니다</summary>
+  <summary>패키지 트리 구조</summary>
   <div markdown="1">
 
     
@@ -126,62 +126,60 @@
 
 ---
 
-
 ### 진행 상황  
 #### 1. 회원 정보와 관련된 CRUD 처리 기능의 REST API 구현
-  - 현재 모바일 앱 내부에서 동작 하는 회원 가입, 탈퇴, 정보 수정 기능을 서버에 구현.
-  - 파라미터 간의 조합으로 이루어지는 회원 고유번호 생성 기능을 자동화 함. 해당 비즈니스 로직의 생산성이 20% 향상.
-  - 개인 정보와 관련된 데이터는 SHA-256에 기반한 자동 암호화 생성 기능을 도입. 현행 기능 대비 보안 효율이 120% 상승.
-   
+- 현재 모바일 앱 내부에서 동작하는 회원 가입, 탈퇴, 정보 수정 기능을 서버에 구현하였습니다.
+- 회원 고유번호 생성 기능을 자동화하여 파라미터 간의 조합에 의존하지 않고 독립적으로 동작하도록 개선하였습니다. 이로써 해당 비즈니스 로직의 생산성이 20% 향상되었습니다.
+- 민감한 개인 정보와 관련된 데이터는 SHA-256을 기반으로 한 자동 암호화 생성 기능을 도입하여 보안 효율을 120% 향상시켰습니다.
+
 #### 2. 인증/인가 절차와 관련된 REST API 구현
-  - 현재 모바일 앱 내부에서 동작 하는 로그인, 로그아웃 기능을 서버에 구현.
-  - 현행 서비스 내에서 RDBMS가 관여하는 로그인 여부를 개선.
-  - Json Web token 발급과 OAuth2.0을 통한 외부 인증/인가 처리를 구현.
+- 현재 모바일 앱 내부에서 동작하는 로그인, 로그아웃 기능을 서버에 구현하였습니다.
+- 기존에는 RDBMS가 관여하는 로그인 여부를 개선하여 서비스 안정성을 향상시켰습니다.
+- OAuth2.0을 통한 외부 인증/인가 처리에서 Json Web Token(JWT)을 발급 및 활용 구현하였습니다.
 
 #### 3. 데이터베이스의 최적화와 테이블 간 정규화
-  - 회원 정보 관련 테이블 'userinfo'간 관계와 PK/SK를 세부 설정.
-  - JPA Hibernates의 ORM 구현체를 통해, 파라미터의 일치 여부로만 판별 되던 테이블 간 연관 관계를 구축.
-  - 기존 'userinfo' 테이블에서 boolean으로 로그인 여부를 처리하는 'login', 'logout' 컬럼을 삭제함. 또한 'userinfo' 테이블의 컬럼 일부를 'userinfo_date'로 정규화하여 테이블 간에 상속 관계를 설정함.
-  - 로그인 처리시 업데이트 되는 시간과 토큰의 유효기간을 대조하는 로직으로 개선함.
-  - 위의 개선 사항들을 통해 데이터베이스 개선 작업을 통해 30%의 생산성을 가져옴.
+- 회원 정보 관련 테이블 'userinfo' 간 관계와 PK/SK를 세부 설정하였습니다.
+- JPA Hibernate의 ORM 구현체를 활용하여 테이블 간 연관 관계를 구축하였습니다. 파라미터 일치 여부만으로 판별되던 기존 로직을 보다 체계적으로 개선하였습니다.
+- 'userinfo' 테이블에서 로그인 여부를 나타내는 'login', 'logout' 컬럼을 삭제하고, 'userinfo' 테이블의 컬럼을 'userinfo_date'로 정규화하여 테이블 간 상속 관계를 설정하였습니다.
+- 로그인 처리 시 업데이트되는 시간과 토큰의 유효 기간을 대조하는 로직을 통해 안전성을 개선했습니다.
+- 위의 개선 사항들을 통해 데이터베이스 작업의 생산성을 30% 향상시켰습니다.
 
-#### 4. 웹 서버 어플리케이션의 자체적인 토큰 발급 기능을 구현
-  - 서버 자체적으로 SHA-256 기반의 암호화 토큰을 생성하여 인증/인가 과정에 사용.
-  - 현재의 단일한 토큰 체계를 accessToken과 refreshToken으로 이원화. 기존 대비 보안 효율성 40% 개선.
-     
+#### 4. 웹 서버 어플리케이션의 자체적인 토큰 발급 기능 구현
+- 서버 자체에서 암호화 알고리즘을 사용하여 SHA-256 기반의 토큰을 생성하여 인증/인가 과정에 사용했습니다.
+- 기존의 단일 토큰 체계를 개선하여 accessToken과 refreshToken으로 이원화함으로써 보안 효율성이 40% 향상되었습니다.
+
 #### 5. 새로운 데이터베이스 모델링의 도입
-  - 기존의 비즈니스 로직 하에서 토큰 저장에 사용된 MySQL를 Redis로 대체함. 
-  - 토큰 처리에 관계형 데이터베이스 조회의 빈도를 줄임으로서 해당 기능의 효율성에 있어 약 20%의 개선을 예상함.
+- 기존의 비즈니스 로직에서 토큰 저장에 사용된 MySQL을 Redis로 대체하였습니다.
+- 토큰 처리에 관계형 데이터베이스 조회 빈도를 줄이는 방식으로 해당 기능의 효율성을 약 20% 향상시켰습니다.
 
 #### 6. 테스트 및 배포에 필요한 서버 구축과 워크 플로우 개선
-   - AWS EC2 Instance와 AWS RDS를 연계하여 서버 환경을 구축.
-   - docker container를 도입해 개발 및 배포 환경의 통일 함.
-   - docker-compose와 github-action을 통해 웹 서버 어플리케이션 패키지 생성 및 서버 배포 과정을 자동화 함.
-    
+- AWS EC2 Instance와 AWS RDS를 연계하여 서버 환경을 구축하였습니다.
+- Docker container를 도입하여 개발 및 배포 환경을 통일하였습니다.
+- docker-compose를 활용하여 웹 서버 어플리케이션 패키지를 생성하고, GitHub Actions를 통해 서버 배포 과정을 자동화했습니다.
+
 ---
 ### 추후 구현 예정인 사항
 #### 1. 기존 모바일 앱에서 지원하는 REST API의 추가 및 개선 작업
-  - 회원 가입 비즈니스 로직에 이메일 인증 추가
-  - 기존의 회원 정보 테이블에서 관리자 정보를 분리하여 해당하는 REST API를 추가
-  - OAuth2.0의 인증 체계 다양화
-#### 2. 코드의 유지 보수 및 리펙토링
-  - 개별 트랜잭션에서 발생하는 에러와 예외 처리 디버깅을 위한 handler 구현
+ - 이메일 인증 기능 도입 : 사용자 인증을 더 강화하고 보안 수준을 높일 예정입니다.
+ - 관리자 정보 분리 : 새로운 REST API를 통해 관리자 권한을 더 효과적으로 관리할 예정입니다.
+ - OAuth 2.0 인증 체계 다양화 : 외부 OAuth 2.0 인증에 더하여 자체 인증체계를 구축하여, 사용자들에게 높은 수준의 보안 뿐만 아니라 다양한 로그인 옵션과 편의성을 제공할 예정입니다.
+ - 코드의 유지 보수 및 리펙토링 : 원활한 유지 보수와 안정적인 서비스 운영을 위한 트랜잭션 에러 및 예외 처리 디버깅을 위한 효과적인 핸들러 구현 예정입니다.
+
 #### 3. 데이터 모델링의 다양화
-  - 외부 게임 데이터 API에 적합한 NoSQL 도입
-  - 외부 게임 데이터 API의 대용량 트랜잭션 처리와 자동화 기능 도입
+ - NoSQL 데이터베이스 도입하여 데이터 모델링을 확장 : 대용량 데이터 트랜잭션 처리와 유연한 데이터 구조를 지원하게 될 것입니다.
+ - 외부 게임 데이터 API 대용량 트랜잭션 처리와 자동화 : Spring Batch를 활용하여 데이터 관리 및 처리 효율성을 향상시킬 예정입니다.
+
 #### 4. 서버 구축 및 자동화 배포 과정
-  - git 리포지토리의 자동화 배포 디버그 및 유지 보수 과정에서 발생하는 비효율을 개선
-  - iOS앱 패키지 git의 릴리즈 자동화를 개선
-  - 운영 중인 서비스에 해당 개발 사항을 적용
-  
+ - git 리포지토리의 자동화 배포 디버그와 유지 보수를 통해 해당 사안의 비효율을 개선하고, 안정적인 서버 환경을 구축할 예정입니다.
+ - iOS 앱 패키지의 git 릴리즈 자동화를 향상하여 개발 및 배포 프로세스를 최적화할 예정입니다.
+ - 운영 중인 서비스에 이러한 개발 사항을 적용하여 사용자에게 더 나은 경험을 제공할 계획입니다.
 ----
+
 ### 개발 기록
-  - <a href="https://velog.io/@letelumiere/squadmania-dev-1" target="_blank"> 프로젝트의 간략한 소개</a>
-  - <a href="https://velog.io/@letelumiere/squadmania-dev-2" target="_blank"> Spring Security의 Congifuration과 authentificationFilter 구축</a>
-  - <a href="https://velog.io/@letelumiere/squadmania-dev-3" target="_blank"> authntificiaionConfiguration 설정</a>
-  - <a href="https://velog.io/@letelumiere/squadmania-dev-4" target="_blank"> JPA with Hibernates를 통한 데이터 영속성 부여 과정</a>
-  - <a href="https://velog.io/@letelumiere/squadmania-dev-5" target="_blank"> 회원 가입, 탈퇴 및 정보 수정 기능 구현</a>
-  - <a href="https://velog.io/@letelumiere/squadmania-dev-6" target="_blank"> 로그인, 로그아웃, Json Web Token 발급 및 유효기간 기능 구현</a>
-  - <a href="https://velog.io/@letelumiere/squadmania-dev-7" target="_blank"> 카카오 서비스를 통한 OAuth2.0 인증 도입 과정</a>
-  - <a href="https://velog.io/@letelumiere/squadmania-dev-8" target="_blank"> Json Web Token의 유효성 체크를 위한 Redis 도입 과정</a>
----
+- [Spring Security의 Configuration과 AuthenticationFilter 구축](https://velog.io/@letelumiere/squadmania-dev-2)
+- [AuthenticationConfiguration 설정](https://velog.io/@letelumiere/squadmania-dev-3)
+- [JPA with Hibernate를 통한 데이터 영속성 부여 과정](https://velog.io/@letelumiere/squadmania-dev-4)
+- [회원 가입, 탈퇴 및 정보 수정 기능 구현](https://velog.io/@letelumiere/squadmania-dev-5)
+- [로그인, 로그아웃, JSON Web Token 발급 및 유효기간 기능 구현](https://velog.io/@letelumiere/squadmania-dev-6)
+- [카카오 서비스를 통한 OAuth 2.0 인증 도입 과정](https://velog.io/@letelumiere/squadmania-dev-7)
+- [JSON Web Token의 유효성 체크를 위한 Redis 도입 과정](https://velog.io/@letelumiere/squadmania-dev-8)
