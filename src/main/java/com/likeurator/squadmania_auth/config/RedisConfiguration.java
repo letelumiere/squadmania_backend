@@ -11,8 +11,6 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 
 @EnableRedisRepositories
 @Configuration
-    //참조 https://blog.naver.com/semtul79/222235108317
-    //참조 https://bcp0109.tistory.com/328
 public class RedisConfiguration {
 
     @Value("${spring.data.redis.host}")

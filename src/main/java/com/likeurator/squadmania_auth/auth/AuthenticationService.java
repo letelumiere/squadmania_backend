@@ -189,7 +189,6 @@ public class AuthenticationService {
         refreshRepository.save(refreshToken);
     }    
 
-    // https://velog.io/@backtony/Redis-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%9E%85%EC%B6%9C%EB%A0%A5-%EB%B0%8F-%EC%9E%90%EB%A3%8C%EA%B5%AC%EC%A1%B0-%EC%8B%A4%EC%8A%B5%ED%95%98%EA%B8%B0
     private void revokeAllUserTokens(Userinfo user) {
         var validUserTokens = tokenRepository.findById(user.getId().toString())
             .orElseThrow(null);
@@ -205,7 +204,6 @@ public class AuthenticationService {
             //3.탈퇴예정일 역시 업데이트를 한다. (한달 뒤)
             //user.setWithdrawDate(); 현재시간+30일 뒤. 년월일만 체크
     
-    //sql에서는 해당 일시가 되어있는 column을 삭제한다. 혹은 uuid와 ROLE만 남기고 나머지 행만 삭제한다. 
     public void withdraw(String email){        
         var user = userRepository.findByEmail(email)
             .orElseThrow(null);
