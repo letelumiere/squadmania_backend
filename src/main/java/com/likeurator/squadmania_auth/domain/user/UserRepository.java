@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.likeurator.squadmania_auth.domain.user.model.Userinfo;
 
-public interface UserRepository extends JpaRepository<Userinfo, Long>{
+public interface UserRepository extends JpaRepository<Userinfo, UUID>{
 
     @Query(value = "select * from userinfo where email_id = ?;",
         nativeQuery = true)

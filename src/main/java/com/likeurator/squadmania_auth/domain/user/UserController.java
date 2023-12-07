@@ -36,11 +36,3 @@ public class UserController {
     }
 
 }
-
-
-//2.	Userinfo get - 로그인용 (parameter : auth_id)
-//3.	Userinfo 수정 - 닉네임 변경 및 다른 정보들 변경 (parameter : id)
-//4.	Userinfo 회원탈퇴 (param: id)
-//5.	휴면아이디 접속했을때, 다른 저장소에서 개인정보를 가져와서 Userinfo 에 다시 넣기 (param: id, email_id)
-//6.	관리자용 API 는 별도로 만들어야 함
-
